@@ -16,4 +16,11 @@ val PrimaryGradientButton = Brush.linearGradient(
     )
 )
 
-val IntroContentTextColor = Color(0xFF494A4B)
+val PrimaryTextColor = Color(0xFF494A4B)
+val HomeScreenGradient = Brush.linearGradient(
+    colors = listOf(
+        Color(0xFFC9D5E5),
+        Color(0xFFF8F9FB),
+    )
+
+)
