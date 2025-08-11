@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -26,6 +28,7 @@ import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
 import org.envobyte.weatherforecast.presentation.theme.PrimaryGradientBg
 import org.envobyte.weatherforecast.presentation.theme.rubikFontFamily
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 import weatherly.composeapp.generated.resources.Res
 import weatherly.composeapp.generated.resources.ic_bg_circle
 import weatherly.composeapp.generated.resources.ic_cloud
@@ -33,10 +36,33 @@ import weatherly.composeapp.generated.resources.ic_sun
 
 @Composable
 fun IntroScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    introViewModel: IntroViewModel = koinViewModel()
 ) {
-    Column(modifier = Modifier.fillMaxSize().background(brush = PrimaryGradientBg)) {
 
+    val isFirstTime by introViewModel.isFirstTime.collectAsState()
+    if (isFirstTime == false) {
+        navController.navigate(Screen.Home) {
+            popUpTo(0)
+        }
+        return
+    }
+    IntroScreenContent(
+        onGetStartedClick = {
+            introViewModel.updateFirstTime()
+            navController.navigate(Screen.Home)
+        }
+    )
+}
+
+@Composable
+private fun IntroScreenContent(
+    onGetStartedClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .background(brush = PrimaryGradientBg)
+    ) {
         BoxWithConstraints(
             modifier = Modifier.weight(.7f).fillMaxWidth()
         ) {
@@ -86,17 +112,12 @@ fun IntroScreen(
                 }
             }
         }
-        PrimaryButton(
-            onClick = {
-                navController.navigate(Screen.Home)
-            },
-        )
+        PrimaryButton(onClick = onGetStartedClick)
         Spacer(
             Modifier
                 .navigationBarsPadding()
                 .height(58.dp)
         )
     }
-
 }
 
