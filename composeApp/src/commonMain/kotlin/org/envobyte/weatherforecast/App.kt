@@ -1,20 +1,14 @@
 package org.envobyte.weatherforecast
 
 import androidx.compose.runtime.Composable
-import org.envobyte.weatherforecast.core.permission.LocationPermissionHandler
-import org.envobyte.weatherforecast.presentation.HomeScreen
-import org.envobyte.weatherforecast.presentation.WeatherlyTheme
+import androidx.navigation.compose.rememberNavController
+import org.envobyte.weatherforecast.presentation.navigation.AppNavigation
+import org.envobyte.weatherforecast.presentation.theme.WeatherlyTheme
 
 @Composable
 fun App(isDarkMode: Boolean) {
     WeatherlyTheme(isDarkMode = isDarkMode) {
-        HomeScreen()
+        val navController = rememberNavController()
+        AppNavigation(navController = navController)
     }
 }
-
-
-
-
-
-
-

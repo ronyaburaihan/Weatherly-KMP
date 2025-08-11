@@ -1,4 +1,4 @@
-rootProject.name = "WeatherForecast"
+rootProject.name = "Weatherly"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

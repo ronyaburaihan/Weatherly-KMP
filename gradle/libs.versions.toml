@@ -16,6 +16,7 @@ koin = "4.1.0"
 ktor = "3.2.3"
 datastore = "1.1.7"
 kotlinx-serialization = "1.9.0"
+navigation-compose = "2.9.0-beta04"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -50,6 +51,9 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences", v
 
 # Kotlinx Serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+# Navigation
+navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
