@@ -1,6 +1,5 @@
 package org.envobyte.weatherforecast.presentation
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,12 +27,4 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppAndroidPreview() {
     App(isDarkMode = false)
-}
-
-
-@SuppressLint("ContextCastToActivity")
-@Composable
-actual fun getPlatformLocationHandler(): LocationPermissionHandler {
-    val activity = LocalContext.current as ComponentActivity
-    return AndroidLocationPermissionHandler(activity)
 }
