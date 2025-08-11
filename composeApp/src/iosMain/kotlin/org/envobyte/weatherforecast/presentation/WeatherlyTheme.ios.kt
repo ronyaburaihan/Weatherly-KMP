@@ -6,6 +6,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import org.envobyte.weatherforecast.IOSLocationPermissionHandler
+import org.envobyte.weatherforecast.core.permission.LocationPermissionHandler
 
 @Composable
 actual fun WeatherlyTheme(
@@ -19,4 +21,9 @@ actual fun WeatherlyTheme(
             content = content
         )
     }
+}
+
+@Composable
+actual fun getPlatformLocationHandler(): LocationPermissionHandler {
+    return IOSLocationPermissionHandler()
 }

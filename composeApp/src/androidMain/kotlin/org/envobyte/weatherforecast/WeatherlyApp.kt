@@ -1,7 +1,12 @@
 package org.envobyte.weatherforecast
 
+import android.annotation.SuppressLint
 import android.app.Application
+import androidx.activity.ComponentActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import org.envobyte.weatherforecast.core.di.initKoin
+import org.envobyte.weatherforecast.core.permission.LocationPermissionHandler
 import org.koin.android.ext.koin.androidContext
 
 class WeatherlyApp : Application() {
@@ -14,3 +19,6 @@ class WeatherlyApp : Application() {
         }
     }
 }
+
+
+

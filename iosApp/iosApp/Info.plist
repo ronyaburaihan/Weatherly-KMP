@@ -3,6 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app needs location access to provide location-based features.</string>
 	<true/>
 </dict>
 </plist>
