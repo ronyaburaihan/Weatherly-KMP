@@ -1,8 +1,6 @@
-package org.envobyte.weatherforecast
+package org.envobyte.weatherforecast.core.permission
 
 import kotlinx.coroutines.suspendCancellableCoroutine
-import org.envobyte.weatherforecast.core.permission.LocationPermissionHandler
-import org.envobyte.weatherforecast.core.permission.PermissionStatus
 import platform.CoreLocation.CLLocationManager
 import platform.CoreLocation.CLLocationManagerDelegateProtocol
 import platform.CoreLocation.kCLAuthorizationStatusAuthorizedAlways
@@ -21,30 +19,34 @@ class IOSLocationPermissionHandler : NSObject(), CLLocationManagerDelegateProtoc
     override suspend fun requestLocationPermission(): PermissionStatus {
         locationManager.delegate = this
         return suspendCancellableCoroutine { cont ->
-            val status = CLLocationManager.authorizationStatus()
+            val status = CLLocationManager.Companion.authorizationStatus()
 
             when (status) {
                 kCLAuthorizationStatusAuthorizedAlways,
                 kCLAuthorizationStatusAuthorizedWhenInUse -> {
                     cont.resume(PermissionStatus.GRANTED)
                 }
+
                 kCLAuthorizationStatusDenied -> {
                     cont.resume(PermissionStatus.DENIED)
                 }
+
                 kCLAuthorizationStatusRestricted -> {
                     cont.resume(PermissionStatus.PERMANENTLY_DENIED)
                 }
+
                 kCLAuthorizationStatusNotDetermined -> {
                     locationManager.requestWhenInUseAuthorization()
                     // In delegate method, resume continuation
                 }
+
                 else -> cont.resume(PermissionStatus.DENIED)
             }
         }
     }
 
     override suspend fun isLocationPermissionGranted(): Boolean {
-        val status = CLLocationManager.authorizationStatus()
+        val status = CLLocationManager.Companion.authorizationStatus()
         return status == kCLAuthorizationStatusAuthorizedAlways ||
                 status == kCLAuthorizationStatusAuthorizedWhenInUse
     }

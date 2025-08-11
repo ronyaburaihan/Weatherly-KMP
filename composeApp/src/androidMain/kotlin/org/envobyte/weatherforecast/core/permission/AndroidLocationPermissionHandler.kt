@@ -1,4 +1,4 @@
-package org.envobyte.weatherforecast
+package org.envobyte.weatherforecast.core.permission
 
 import android.Manifest
 import android.app.Activity
@@ -6,8 +6,6 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.suspendCancellableCoroutine
-import org.envobyte.weatherforecast.core.permission.LocationPermissionHandler
-import org.envobyte.weatherforecast.core.permission.PermissionStatus
 import kotlin.coroutines.resume
 
 class AndroidLocationPermissionHandler(

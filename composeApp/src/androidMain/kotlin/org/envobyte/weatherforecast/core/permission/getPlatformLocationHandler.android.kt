@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import org.envobyte.weatherforecast.AndroidLocationPermissionHandler
+import org.envobyte.weatherforecast.core.permission.AndroidLocationPermissionHandler
 
 @SuppressLint("ContextCastToActivity")
 @Composable

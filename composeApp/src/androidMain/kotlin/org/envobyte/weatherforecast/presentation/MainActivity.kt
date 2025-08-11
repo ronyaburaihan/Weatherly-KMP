@@ -8,7 +8,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import org.envobyte.weatherforecast.AndroidLocationPermissionHandler
+import org.envobyte.weatherforecast.core.permission.AndroidLocationPermissionHandler
 import org.envobyte.weatherforecast.App
 import org.envobyte.weatherforecast.core.permission.LocationPermissionHandler
 
