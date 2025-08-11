@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.envobyte.weatherforecast.presentation.navigation.Screen
 import org.envobyte.weatherforecast.presentation.screen.component.PrimaryButton
-import org.envobyte.weatherforecast.presentation.theme.IntroContentTextColor
+import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
 import org.envobyte.weatherforecast.presentation.theme.PrimaryGradientBg
 import org.envobyte.weatherforecast.presentation.theme.rubikFontFamily
 import org.jetbrains.compose.resources.painterResource
@@ -70,7 +70,7 @@ fun IntroScreen(
                         "Never get caught \nin the rain again",
                         style = MaterialTheme.typography.displaySmall.copy(
                             fontWeight = FontWeight.W500,
-                            color = IntroContentTextColor,
+                            color = PrimaryTextColor,
                             lineHeight = 39.sp,
                             fontFamily = rubikFontFamily(),
                         ),
@@ -78,7 +78,7 @@ fun IntroScreen(
                     Text(
                         "Stay ahead of the weather with our accurate forecasts",
                         style = MaterialTheme.typography.bodyLarge.copy(
-                            color = IntroContentTextColor,
+                            color = PrimaryTextColor,
                             fontFamily = rubikFontFamily()
                         )
                     )

@@ -39,6 +39,7 @@ fun AppNavigation(
     val fullScreenScreens = remember {
         setOf(
             Screen.Intro::class.qualifiedName,
+            Screen.Home::class.qualifiedName,
         )
     }
 
