@@ -21,4 +21,3 @@ fun HomeScreen() {
         Text(modifier = Modifier.padding(it), text = "Weatherly App")
     }
 }
-
