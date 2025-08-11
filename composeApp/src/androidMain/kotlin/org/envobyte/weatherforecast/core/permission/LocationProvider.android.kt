@@ -10,6 +10,7 @@ import kotlin.coroutines.resume
 actual class LocationProvider actual constructor(
     private val context: Any?
 ) {
+
     @SuppressLint("MissingPermission")
     actual suspend fun getCurrentLocation(): LocationData? =
         suspendCancellableCoroutine { cont ->
