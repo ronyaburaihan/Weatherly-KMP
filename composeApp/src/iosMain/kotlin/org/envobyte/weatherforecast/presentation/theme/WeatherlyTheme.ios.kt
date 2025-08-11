@@ -1,4 +1,4 @@
-package org.envobyte.weatherforecast.presentation
+package org.envobyte.weatherforecast.presentation.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
