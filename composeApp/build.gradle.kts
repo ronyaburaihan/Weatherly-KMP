@@ -67,6 +67,9 @@ kotlin {
 
             // Navigation
             implementation(libs.navigation.compose)
+
+            // Date Time
+            implementation(libs.kotlinx.datetime)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

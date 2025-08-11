@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.envobyte.weatherforecast.presentation.theme.PrimaryGradientButton
-import org.envobyte.weatherforecast.presentation.theme.RubikFontFamily
+import org.envobyte.weatherforecast.presentation.theme.rubikFontFamily
 
 @Composable
 
@@ -29,8 +29,7 @@ fun PrimaryButton(
         modifier = modifier.fillMaxWidth()
             .height(56.dp)
             .padding(horizontal = 28.dp)
-            .background(PrimaryGradientButton, shape = RoundedCornerShape(24.dp))
-        ,
+            .background(PrimaryGradientButton, shape = RoundedCornerShape(24.dp)),
         shape = RoundedCornerShape(24.dp),
         colors = ButtonDefaults.buttonColors(
             contentColor = Color.White,
@@ -38,10 +37,12 @@ fun PrimaryButton(
         ),
         onClick = onClick,
     ) {
-        Text(buttonText, style = TextStyle(
-            fontFamily = RubikFontFamily(),
-            fontWeight = FontWeight.W400,
-            fontSize = 16.sp,
-        ))
+        Text(
+            buttonText, style = TextStyle(
+                fontFamily = rubikFontFamily(),
+                fontWeight = FontWeight.W400,
+                fontSize = 16.sp,
+            )
+        )
     }
 }

@@ -13,21 +13,17 @@ import weatherly.composeapp.generated.resources.rubik_regular
 import weatherly.composeapp.generated.resources.rubik_semi_bold
 
 @Composable
-fun RubikFontFamily()= FontFamily(
-       Font(Res.font.rubik_regular, weight = FontWeight.Normal),
-       Font(Res.font.rubik_medium, weight = FontWeight.Medium),
-       Font(Res.font.rubik_semi_bold, weight = FontWeight.SemiBold),
-       Font(Res.font.rubik_bold, weight = FontWeight.Bold)
-
-   )
-
-
+fun rubikFontFamily() = FontFamily(
+    Font(Res.font.rubik_regular, weight = FontWeight.Normal),
+    Font(Res.font.rubik_medium, weight = FontWeight.Medium),
+    Font(Res.font.rubik_semi_bold, weight = FontWeight.SemiBold),
+    Font(Res.font.rubik_bold, weight = FontWeight.Bold)
+)
 
 
 @Composable
 fun rubikTypography() = Typography().run {
-
-    val fontFamily = RubikFontFamily()
+    val fontFamily = rubikFontFamily()
     copy(
         displayLarge = displayLarge.copy(fontFamily = fontFamily),
         displayMedium = displayMedium.copy(fontFamily = fontFamily),
@@ -38,7 +34,7 @@ fun rubikTypography() = Typography().run {
         titleLarge = titleLarge.copy(fontFamily = fontFamily),
         titleMedium = titleMedium.copy(fontFamily = fontFamily),
         titleSmall = titleSmall.copy(fontFamily = fontFamily),
-        bodyLarge = bodyLarge.copy(fontFamily =  fontFamily),
+        bodyLarge = bodyLarge.copy(fontFamily = fontFamily),
         bodyMedium = bodyMedium.copy(fontFamily = fontFamily),
         bodySmall = bodySmall.copy(fontFamily = fontFamily),
         labelLarge = labelLarge.copy(fontFamily = fontFamily),
