@@ -1,4 +1,4 @@
-package org.envobyte.weatherforecast.presentation
+package org.envobyte.weatherforecast.presentation.theme
 
 import androidx.compose.runtime.Composable
 
