@@ -13,13 +13,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App()
+
         }
     }
 }
 
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
-}
+
+
+
