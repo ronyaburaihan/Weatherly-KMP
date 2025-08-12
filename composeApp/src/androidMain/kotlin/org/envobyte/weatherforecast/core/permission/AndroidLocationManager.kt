@@ -5,13 +5,12 @@ import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-class AndroidLocationPermissionHandler(
+class AndroidLocationManager(
     private val activity: ComponentActivity
-) : LocationPermissionHandler {
+) : LocationManager {
 
     override suspend fun requestLocationPermission(): PermissionStatus {
         val permissions = arrayOf(

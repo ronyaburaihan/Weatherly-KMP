@@ -11,8 +11,8 @@ import platform.CoreLocation.kCLAuthorizationStatusRestricted
 import platform.darwin.NSObject
 import kotlin.coroutines.resume
 
-class IOSLocationPermissionHandler : NSObject(), CLLocationManagerDelegateProtocol,
-    LocationPermissionHandler {
+class IOSLocationManager : NSObject(), CLLocationManagerDelegateProtocol,
+    LocationManager {
 
     private val locationManager = CLLocationManager()
 

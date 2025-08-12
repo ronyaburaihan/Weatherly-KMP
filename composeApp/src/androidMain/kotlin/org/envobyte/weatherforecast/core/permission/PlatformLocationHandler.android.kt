@@ -3,7 +3,6 @@ package org.envobyte.weatherforecast.core.permission
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -16,7 +15,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CompletableDeferred
 
 @Composable
-actual fun getPlatformLocationHandler(): LocationPermissionHandler {
+actual fun getPlatformLocationHandler(): LocationManager {
     val context = LocalContext.current
 
     var pending by remember { mutableStateOf<CompletableDeferred<PermissionStatus>?>(null) }
@@ -30,7 +29,7 @@ actual fun getPlatformLocationHandler(): LocationPermissionHandler {
         }
     )
 
-    return object : LocationPermissionHandler {
+    return object : LocationManager {
         override suspend fun requestLocationPermission(): PermissionStatus {
             val permissions = arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -52,6 +51,15 @@ actual fun getPlatformLocationHandler(): LocationPermissionHandler {
             )
             return arePermissionsGranted(context, permissions)
         }
+
+        override suspend fun getCurrentLocation(): LocationData? {
+            val permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            if (!arePermissionsGranted(context, permissions)) return null
+            return LocationProvider(context).getCurrentLocation()
+        }
     }
 }
 
@@ -59,8 +67,3 @@ private fun arePermissionsGranted(context: Context, permissions: Array<String>):
     permissions.all { perm ->
         ContextCompat.checkSelfPermission(context, perm) == PackageManager.PERMISSION_GRANTED
     }
-
-@Composable
-actual fun getPlatformContext(): Any? {
-    return LocalContext.current
-}
