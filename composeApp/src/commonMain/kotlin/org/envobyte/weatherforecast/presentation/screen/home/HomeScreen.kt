@@ -59,14 +59,17 @@ fun HomeScreen(
             ShimmerEffect()
         } else {
             uiState.weatherData?.let {
-                HomeContent(it)
+                HomeContent(
+                    locationName = uiState.locationName ?: "",
+                    weatherData = it
+                )
             }
         }
     }
 }
 
 @Composable
-fun HomeContent(weatherData: WeatherData) {
+fun HomeContent(locationName: String, weatherData: WeatherData) {
 
     Box(modifier = Modifier.fillMaxSize().background(HomeScreenGradient)) {
         Image(
@@ -93,7 +96,7 @@ fun HomeContent(weatherData: WeatherData) {
             )
             Spacer(Modifier.height(33.dp))
             TemperatureSection(
-                weatherData.current.location,
+                locationName,
                 weatherData.current.temperature,
                 weatherData.current.condition
             )

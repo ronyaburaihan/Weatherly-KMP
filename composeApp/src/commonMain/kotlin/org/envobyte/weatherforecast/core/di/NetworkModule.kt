@@ -13,8 +13,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.envobyte.weatherforecast.data.remote.WeatherApiService
-import org.envobyte.weatherforecast.data.remote.WeatherApiServiceImpl
+import org.envobyte.weatherforecast.data.remote.RemoteApiService
+import org.envobyte.weatherforecast.data.remote.RemoteApiServiceImpl
 import org.koin.dsl.module
 
 val networkModule = module {
@@ -45,6 +45,6 @@ val networkModule = module {
         }
     }
 
-    single<WeatherApiService> { WeatherApiServiceImpl(get()) }
+    single<RemoteApiService> { RemoteApiServiceImpl(get()) }
 
 }
