@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import org.envobyte.weatherforecast.core.di.initKoin
 import org.envobyte.weatherforecast.core.permission.LocationPermissionHandler
 import org.koin.android.ext.koin.androidContext
+import org.envobyte.weatherforecast.core.di.platformModule
 
 class WeatherlyApp : Application() {
 
@@ -16,6 +17,7 @@ class WeatherlyApp : Application() {
 
         initKoin {
             androidContext(this@WeatherlyApp)
+            modules(platformModule)
         }
     }
 }

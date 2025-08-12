@@ -12,3 +12,8 @@ actual fun getPlatformLocationHandler(): LocationPermissionHandler {
     val activity = LocalContext.current as ComponentActivity
     return AndroidLocationPermissionHandler(activity)
 }
+
+@Composable
+actual fun getPlatformContext(): Any? {
+    return LocalContext.current
+}

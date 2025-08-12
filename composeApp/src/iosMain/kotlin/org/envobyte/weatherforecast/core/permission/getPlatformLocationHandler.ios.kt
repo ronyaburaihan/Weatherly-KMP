@@ -7,3 +7,8 @@ import org.envobyte.weatherforecast.core.permission.IOSLocationPermissionHandler
 actual fun getPlatformLocationHandler(): LocationPermissionHandler {
     return IOSLocationPermissionHandler()
 }
+
+@Composable
+actual fun getPlatformContext(): Any? {
+    return null
+}

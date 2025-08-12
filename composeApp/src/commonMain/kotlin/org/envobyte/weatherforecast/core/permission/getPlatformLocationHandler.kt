@@ -5,6 +5,9 @@ import androidx.compose.runtime.Composable
 @Composable
 expect fun getPlatformLocationHandler(): LocationPermissionHandler
 
+@Composable
+expect fun getPlatformContext(): Any?
+
 
 
 suspend fun ensureLocationPermission(handler: LocationPermissionHandler): Boolean {
