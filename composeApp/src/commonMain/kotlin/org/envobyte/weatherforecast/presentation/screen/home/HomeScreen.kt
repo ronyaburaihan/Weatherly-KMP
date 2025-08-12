@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
+import org.envobyte.weatherforecast.presentation.screen.component.HomeLoadingPlaceholder
 import org.envobyte.weatherforecast.presentation.theme.HomeScreenGradient
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
 import org.envobyte.weatherforecast.presentation.theme.WeatherIconGradient
@@ -205,16 +206,14 @@ private fun DailyForCast(weatherData: WeatherData) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(bottom = 30.dp).navigationBarsPadding()
             .background(Color.White.copy(.8f), shape = RoundedCornerShape(24.dp))
-            .clip(RoundedCornerShape(24.dp)).padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            .clip(RoundedCornerShape(24.dp)).padding(16.dp)
     ) {
         Text(
             "Next days",
             style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF8E8E8E))
         )
         LazyColumn(
-            contentPadding = PaddingValues(
-                vertical = 16.dp
-            ),
+            contentPadding = PaddingValues(top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(weatherData.forecast, key = { item -> item.formattedDate }) { item ->
