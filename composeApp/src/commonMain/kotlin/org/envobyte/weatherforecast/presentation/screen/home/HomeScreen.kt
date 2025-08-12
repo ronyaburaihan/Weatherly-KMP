@@ -85,16 +85,22 @@ fun HomeContent(weatherData: WeatherData) {
             modifier = Modifier.fillMaxSize().padding(horizontal = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AppTopBar(modifier = Modifier)
+            AppTopBar(
+                title = "Good morning",
+                subtitle = weatherData.current.date,
+                onMenuClick = {}
+            )
             Spacer(Modifier.height(33.dp))
             TemperatureSection(
-                "London", "${weatherData.current.temperature}°C", weatherData.current.condition
+                weatherData.current.location,
+                weatherData.current.temperature,
+                weatherData.current.condition
             )
             Spacer(Modifier.height(36.dp))
             WeatherDetailsCard(
-                humidity = "${weatherData.current.humidity}%",
-                uvIndex = weatherData.current.uvIndex.toString(),
-                precipitation = "${weatherData.current.precipitation}mm",
+                humidity = weatherData.current.humidity,
+                windSpeed = weatherData.current.windSpeed,
+                precipitation = weatherData.current.precipitation,
             )
             Spacer(Modifier.height(20.dp))
             DailyForCast(weatherData)
@@ -103,10 +109,14 @@ fun HomeContent(weatherData: WeatherData) {
 }
 
 @Composable
-fun TemperatureSection(locationName: String, celsius: String, weatherCondition: String) {
-
+fun TemperatureSection(
+    locationName: String,
+    celsius: String,
+    weatherCondition: String
+) {
     Column(
-        modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             locationName, style = MaterialTheme.typography.titleLarge.copy(
@@ -115,7 +125,8 @@ fun TemperatureSection(locationName: String, celsius: String, weatherCondition: 
             )
         )
         Text(
-            celsius, style = MaterialTheme.typography.displayMedium.copy(
+            text = celsius,
+            style = MaterialTheme.typography.displayMedium.copy(
                 fontWeight = FontWeight.W500,
                 fontSize = 96.sp,
                 color = PrimaryTextColor
@@ -131,8 +142,11 @@ fun TemperatureSection(locationName: String, celsius: String, weatherCondition: 
 }
 
 @Composable
-fun WeatherDetailsCard(humidity: String, uvIndex: String, precipitation: String) {
-
+fun WeatherDetailsCard(
+    humidity: String,
+    windSpeed: String,
+    precipitation: String
+) {
     Row(
         modifier = Modifier.fillMaxWidth()
             .background(Color.White, shape = RoundedCornerShape(24.dp))
@@ -140,14 +154,16 @@ fun WeatherDetailsCard(humidity: String, uvIndex: String, precipitation: String)
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         WeatherInfoItem(
-            status = "Uv Index",
-            value = uvIndex,
+            status = "Wind Speed",
+            value = windSpeed,
         )
         WeatherInfoItem(
-            status = "Humidity", value = humidity
+            status = "Humidity",
+            value = humidity
         )
         WeatherInfoItem(
-            status = "Precipitation", value = precipitation
+            status = "Precipitation",
+            value = precipitation
         )
     }
 }
@@ -172,8 +188,10 @@ private fun WeatherInfoItem(
         Spacer(Modifier.height(4.dp))
 
         Text(
-            value, style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 20.sp, fontWeight = FontWeight.W500
+            text = value,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.W500
             )
         )
 
@@ -188,14 +206,19 @@ private fun DailyForCast(weatherData: WeatherData) {
             .clip(RoundedCornerShape(24.dp)).padding(16.dp)
     ) {
         Text(
-            "Next days", style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF8E8E8E))
+            "Next days",
+            style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF8E8E8E))
         )
         LazyColumn {
-            items(weatherData.forecast, key = { item -> item.date }) { item ->
+            items(
+                weatherData.forecast,
+                key = { item -> item.formattedDate }
+            ) { item ->
                 Spacer(Modifier.height(16.dp))
                 DailyForCastItem(
+                    icon = item.icon,
                     temperature = item.temperature.toString(),
-                    date = item.date
+                    date = item.formattedDate
                 )
             }
         }
@@ -203,9 +226,20 @@ private fun DailyForCast(weatherData: WeatherData) {
 }
 
 @Composable
-private fun DailyForCastItem(temperature: String, date: String) {
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Image(painterResource(Res.drawable.rain), contentDescription = null)
+private fun DailyForCastItem(
+    icon: String,
+    temperature: String,
+    date: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(icon, style = MaterialTheme.typography.bodyLarge)
+        Image(
+            painterResource(Res.drawable.rain),
+            contentDescription = null
+        )
         Spacer(Modifier.width(12.dp))
         Row(
             modifier = Modifier.weight(1f)
@@ -219,7 +253,8 @@ private fun DailyForCastItem(temperature: String, date: String) {
             )
             Spacer(Modifier.width(12.dp))
             Text(
-                date, style = MaterialTheme.typography.bodyLarge.copy(
+                text = date,
+                style = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 14.sp, fontWeight = FontWeight.W400, color = Color(0xFF8E8E8E)
                 )
             )

@@ -21,27 +21,38 @@ import weatherly.composeapp.generated.resources.menu_button
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(modifier: Modifier = Modifier) {
+fun AppTopBar(
+    modifier: Modifier = Modifier,
+    title: String = "",
+    subtitle: String = "",
+    onMenuClick: () -> Unit = {}
+) {
     TopAppBar(
         modifier = modifier,
         title = {
             Column {
                 Text(
-                    "Good morning", style = MaterialTheme.typography.bodyLarge.copy(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge.copy(
                         color = PrimaryTextColor,
                         fontWeight = FontWeight.SemiBold,
                     )
                 )
                 Text(
-                    "Mon , 11 Aug 2025",
+                    text = subtitle,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
         },
         actions = {
-            IconButton(onClick = {
-            }, modifier = Modifier.size(40.dp)) {
-                Icon(painter = painterResource(Res.drawable.menu_button), contentDescription = null)
+            IconButton(
+                onClick = onMenuClick,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.menu_button),
+                    contentDescription = null
+                )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
