@@ -1,7 +1,6 @@
 package org.envobyte.weatherforecast.presentation.screen.component
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,28 +15,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
-import org.envobyte.weatherforecast.presentation.theme.rubikFontFamily
 import org.jetbrains.compose.resources.painterResource
 import weatherly.composeapp.generated.resources.Res
 import weatherly.composeapp.generated.resources.menu_button
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar() {
+fun AppTopBar(modifier: Modifier = Modifier) {
     TopAppBar(
-        modifier = Modifier.padding(horizontal = 28.dp, vertical = 0.dp),
+        modifier = modifier,
         title = {
             Column {
                 Text(
                     "Good morning", style = MaterialTheme.typography.bodyLarge.copy(
                         color = PrimaryTextColor,
                         fontWeight = FontWeight.SemiBold,
-                        fontFamily = rubikFontFamily()
                     )
                 )
                 Text(
                     "Mon , 11 Aug 2025",
-                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = rubikFontFamily())
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         },
