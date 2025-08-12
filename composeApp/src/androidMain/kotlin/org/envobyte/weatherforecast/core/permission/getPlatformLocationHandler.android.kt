@@ -1,14 +1,66 @@
 package org.envobyte.weatherforecast.core.permission
 
-import android.annotation.SuppressLint
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import org.envobyte.weatherforecast.core.permission.AndroidLocationPermissionHandler
+import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CompletableDeferred
 
-@SuppressLint("ContextCastToActivity")
 @Composable
 actual fun getPlatformLocationHandler(): LocationPermissionHandler {
-    val activity = LocalContext.current as ComponentActivity
-    return AndroidLocationPermissionHandler(activity)
+    val context = LocalContext.current
+
+    var pending by remember { mutableStateOf<CompletableDeferred<PermissionStatus>?>(null) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { result: Map<String, Boolean> ->
+            val grantedNow = result.values.all { it }
+            pending?.complete(if (grantedNow) PermissionStatus.GRANTED else PermissionStatus.DENIED)
+            pending = null
+        }
+    )
+
+    return object : LocationPermissionHandler {
+        override suspend fun requestLocationPermission(): PermissionStatus {
+            val permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            if (arePermissionsGranted(context, permissions)) {
+                return PermissionStatus.GRANTED
+            }
+            val deferred = CompletableDeferred<PermissionStatus>()
+            pending = deferred
+            launcher.launch(permissions)
+            return deferred.await()
+        }
+
+        override suspend fun isLocationPermissionGranted(): Boolean {
+            val permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            return arePermissionsGranted(context, permissions)
+        }
+    }
+}
+
+private fun arePermissionsGranted(context: Context, permissions: Array<String>): Boolean =
+    permissions.all { perm ->
+        ContextCompat.checkSelfPermission(context, perm) == PackageManager.PERMISSION_GRANTED
+    }
+
+@Composable
+actual fun getPlatformContext(): Any? {
+    return LocalContext.current
 }
