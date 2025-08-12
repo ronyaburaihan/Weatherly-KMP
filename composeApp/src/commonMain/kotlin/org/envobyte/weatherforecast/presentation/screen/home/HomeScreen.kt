@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -37,13 +39,13 @@ import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
 import org.envobyte.weatherforecast.presentation.theme.HomeScreenGradient
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
+import org.envobyte.weatherforecast.presentation.theme.WeatherIconGradient
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import weatherly.composeapp.generated.resources.Res
 import weatherly.composeapp.generated.resources.blur_sun
 import weatherly.composeapp.generated.resources.cloudy_weather
 import weatherly.composeapp.generated.resources.ic_cloudy_sun
-import weatherly.composeapp.generated.resources.rain
 
 @Composable
 fun HomeScreen(
@@ -203,18 +205,19 @@ private fun DailyForCast(weatherData: WeatherData) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(bottom = 30.dp).navigationBarsPadding()
             .background(Color.White.copy(.8f), shape = RoundedCornerShape(24.dp))
-            .clip(RoundedCornerShape(24.dp)).padding(16.dp)
+            .clip(RoundedCornerShape(24.dp)).padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
         Text(
             "Next days",
             style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF8E8E8E))
         )
-        LazyColumn {
-            items(
-                weatherData.forecast,
-                key = { item -> item.formattedDate }
-            ) { item ->
-                Spacer(Modifier.height(16.dp))
+        LazyColumn(
+            contentPadding = PaddingValues(
+                vertical = 16.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(weatherData.forecast, key = { item -> item.formattedDate }) { item ->
                 DailyForCastItem(
                     icon = item.icon,
                     temperature = item.temperature.toString(),
@@ -235,16 +238,24 @@ private fun DailyForCastItem(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(icon, style = MaterialTheme.typography.bodyLarge)
-        Image(
-            painterResource(Res.drawable.rain),
-            contentDescription = null
-        )
+
+        Box(
+            modifier = Modifier.size(64.dp).background(
+                WeatherIconGradient, shape = CircleShape
+            ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = icon,
+                fontSize = 30.sp
+            )
+        }
         Spacer(Modifier.width(12.dp))
         Row(
             modifier = Modifier.weight(1f)
                 .border(1.dp, color = Color.White, shape = RoundedCornerShape(360.dp))
-                .clip(RoundedCornerShape(360.dp)).padding(horizontal = 16.dp, vertical = 20.dp)
+                .clip(RoundedCornerShape(360.dp))
+                .padding(horizontal = 16.dp, vertical = 20.dp)
         ) {
             Text(
                 "$temperature°", style = MaterialTheme.typography.bodyLarge.copy(
@@ -255,7 +266,9 @@ private fun DailyForCastItem(
             Text(
                 text = date,
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 14.sp, fontWeight = FontWeight.W400, color = Color(0xFF8E8E8E)
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W400,
+                    color = Color(0xFF8E8E8E)
                 )
             )
         }

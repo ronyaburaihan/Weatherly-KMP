@@ -22,5 +22,12 @@ val HomeScreenGradient = Brush.linearGradient(
         Color(0xFFC9D5E5),
         Color(0xFFF8F9FB),
     )
+)
 
+val WeatherIconGradient = Brush.linearGradient(
+
+    colors = listOf(
+        Color(0xFFD2E2F6),
+        Color(0xFFFCFDFE),
+    )
 )
