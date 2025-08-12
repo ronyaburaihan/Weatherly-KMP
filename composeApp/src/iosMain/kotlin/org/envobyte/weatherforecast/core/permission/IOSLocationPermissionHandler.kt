@@ -50,4 +50,8 @@ class IOSLocationPermissionHandler : NSObject(), CLLocationManagerDelegateProtoc
         return status == kCLAuthorizationStatusAuthorizedAlways ||
                 status == kCLAuthorizationStatusAuthorizedWhenInUse
     }
+
+    override suspend fun getCurrentLocation(): LocationData? {
+        return LocationProvider(locationManager).getCurrentLocation()
+    }
 }

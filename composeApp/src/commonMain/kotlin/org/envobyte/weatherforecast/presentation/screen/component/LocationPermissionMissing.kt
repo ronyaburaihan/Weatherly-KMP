@@ -31,11 +31,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun LocationPermissionScreen(
     onPermissionGranted: () -> Unit = {},
-    onPermissionDenied: () -> Unit = {}
+    onPermissionDenied: () -> Unit = {},
+    statusText: String
 ) {
-    val scope = rememberCoroutineScope()
-    val handler = getPlatformLocationHandler()
-    var statusText by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -48,18 +46,7 @@ fun LocationPermissionScreen(
         Text("Enable your location", style = MaterialTheme.typography.headlineSmall)
         Text("Allow location access to get accurate weather for where you are.", style = MaterialTheme.typography.bodyMedium)
         Spacer(Modifier.height(24.dp))
-        Button(modifier = Modifier.fillMaxWidth(), onClick = {
-            scope.launch {
-                val granted = ensureLocationPermission(handler)
-                if (granted) {
-                    statusText = "Permission granted"
-                    onPermissionGranted()
-                } else {
-                    statusText = "Permission denied"
-                    onPermissionDenied()
-                }
-            }
-        }) {
+        Button(modifier = Modifier.fillMaxWidth(), onClick = {}) {
             Text("Allow location")
         }
         Spacer(Modifier.height(8.dp))
