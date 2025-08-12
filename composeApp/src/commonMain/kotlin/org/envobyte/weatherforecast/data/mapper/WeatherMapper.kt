@@ -1,13 +1,10 @@
 package org.envobyte.weatherforecast.data.mapper
 
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDate
 import org.envobyte.weatherforecast.data.model.WeatherApiResponse
 import org.envobyte.weatherforecast.domain.model.ForecastDay
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.domain.model.WeatherInfo
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 fun WeatherApiResponse.toWeatherData(): WeatherData {
     return WeatherData(
@@ -18,27 +15,33 @@ fun WeatherApiResponse.toWeatherData(): WeatherData {
 
 fun WeatherApiResponse.toWeatherInfo(): WeatherInfo {
     return WeatherInfo(
-        location = "Current Location", // Open-Meteo doesn't provide location name
-        temperature = current.temperature_2m.toInt(),
+        location = "Khulna",
+        temperature = "${current.temperature_2m.toInt()}${currentUnits.temperature_2m}",
         condition = mapWeatherCodeToCondition(current.weather_code),
         icon = mapWeatherCodeToIcon(current.weather_code),
-        uvIndex = 0, // Open-Meteo basic plan doesn't include UV index
-        humidity = current.relative_humidity_2m,
-        precipitation = current.precipitation.toInt(),
-        date = current.time
+        windSpeed = "${current.wind_speed_10m}${currentUnits.wind_speed_10m}",
+        humidity = "${current.relative_humidity_2m}${currentUnits.relative_humidity_2m}",
+        precipitation = "${current.precipitation}${currentUnits.precipitation}",
+        date = formatDateString(current.time.substringBefore("T"), true)
     )
 }
 
 fun WeatherApiResponse.toForecastDays(): List<ForecastDay> {
     return daily.time.mapIndexed { index, dateString ->
         ForecastDay(
-            date = dateString,
-            dayName = formatDayName(dateString, index),
-            temperature = daily.temperature_2m_max[index].toInt(),
-            condition = mapWeatherCodeToCondition(daily.weather_code[index]),
-            icon = mapWeatherCodeToIcon(daily.weather_code[index])
+            formattedDate = formatDateString(dateString),
+            temperature = averageTemperature(
+                daily.temperature_2m_max[index].toInt(),
+                daily.temperature_2m_min[index].toInt()
+            ),
+            icon = mapWeatherCodeToIcon(daily.weather_code[index]),
+            precipitation = daily.precipitation_sum[index].toInt()
         )
     }
+}
+
+private fun averageTemperature(toInt: Int, toInt2: Int): Int {
+    return (toInt + toInt2) / 2
 }
 
 private fun mapWeatherCodeToCondition(code: Int): String {
@@ -72,24 +75,21 @@ private fun mapWeatherCodeToIcon(code: Int): String {
     }
 }
 
-@OptIn(ExperimentalTime::class)
-private fun formatDayName(dateString: String, index: Int): String {
-    return when (index) {
-        0 -> "Today"
-        1 -> "Tomorrow"
-        else -> {
-            try {
-                val dayNames = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-                val currentTime = Clock.System.now()
-                val currentDay = currentTime.toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.ordinal
-                val targetDay = (currentDay + index) % 7
-                dayNames[targetDay]
-            } catch (e: Exception) {
-                "Day ${index + 1}"
-            }
-        }
+fun formatDateString(dateString: String, includeYear: Boolean = false): String {
+    val date = LocalDate.parse(dateString)
+
+    val dayOfWeek = date.dayOfWeek.name.lowercase()
+        .replaceFirstChar { it.titlecase() }
+    val monthName = date.month.name.take(3).lowercase()
+        .replaceFirstChar { it.titlecase() }
+
+    return if (includeYear) {
+        "$dayOfWeek, ${date.day} $monthName ${date.year}"
+    } else {
+        "$dayOfWeek, ${date.day} $monthName"
     }
 }
+
 
 // Extension functions for easier mapping in repository
 fun WeatherApiResponse.toCurrentWeather(): WeatherInfo = this.toWeatherInfo()
