@@ -24,7 +24,6 @@ import org.envobyte.weatherforecast.presentation.navigation.Screen
 import org.envobyte.weatherforecast.presentation.screen.component.PrimaryButton
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
 import org.envobyte.weatherforecast.presentation.theme.PrimaryGradientBg
-import org.envobyte.weatherforecast.presentation.theme.rubikFontFamily
 import org.jetbrains.compose.resources.painterResource
 import weatherly.composeapp.generated.resources.Res
 import weatherly.composeapp.generated.resources.ic_bg_circle
@@ -72,14 +71,12 @@ fun IntroScreen(
                             fontWeight = FontWeight.W500,
                             color = PrimaryTextColor,
                             lineHeight = 39.sp,
-                            fontFamily = rubikFontFamily(),
                         ),
                     )
                     Text(
                         "Stay ahead of the weather with our accurate forecasts",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             color = PrimaryTextColor,
-                            fontFamily = rubikFontFamily()
                         )
                     )
                     Spacer(Modifier.height(36.dp))

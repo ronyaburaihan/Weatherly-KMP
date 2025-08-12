@@ -1,7 +1,6 @@
 package org.envobyte.weatherforecast.presentation.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -15,7 +14,7 @@ actual fun WeatherlyTheme(
     CompositionLocalProvider {
         MaterialTheme(
             colorScheme = if (isDarkMode) darkColorScheme() else lightColorScheme(),
-            typography = typography,
+            typography = rubikTypography(),
             content = content
         )
     }

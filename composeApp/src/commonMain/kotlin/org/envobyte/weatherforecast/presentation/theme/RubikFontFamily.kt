@@ -2,7 +2,6 @@ package org.envobyte.weatherforecast.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import org.jetbrains.compose.resources.Font
