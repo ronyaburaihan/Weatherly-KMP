@@ -19,6 +19,7 @@ import org.envobyte.weatherforecast.core.permission.ensureLocationPermission
 import org.envobyte.weatherforecast.core.permission.getCurrentLocation
 import org.envobyte.weatherforecast.core.permission.getPlatformLocationHandler
 import org.envobyte.weatherforecast.core.permission.getPlatformContext
+import org.envobyte.weatherforecast.presentation.screen.component.LocationPermissionScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -28,27 +29,49 @@ fun HomeScreen(
     val viewModel: HomeViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
+    val handler = getPlatformLocationHandler()
+    val provider = LocationProvider(getPlatformContext())
+
+    var permissionGranted by remember { mutableStateOf<Boolean?>(null) }
+    var locationText by remember { mutableStateOf("Requesting location...") }
+
+    LaunchedEffect(Unit) {
+        // Check current permission state on entry
+        permissionGranted = handler.isLocationPermissionGranted()
+    }
+
     Box {
         Column {
-            var locationText by remember { mutableStateOf("Requesting location...") }
             if (uiState.firstLaunchCompleted) {
-                Text(text = "First launch is completed="+uiState.firstLaunchCompleted)
-            }else{
-                Text(text = "First launch is completed="+uiState.firstLaunchCompleted)
+                Text(text = "First launch is completed=" + uiState.firstLaunchCompleted)
+            } else {
+                Text(text = "First launch is completed=" + uiState.firstLaunchCompleted)
             }
-            Text(text = locationText)
 
-
-
-            val handler = getPlatformLocationHandler()
-            val provider = LocationProvider(getPlatformContext())
-
-            LaunchedEffect(Unit) {
-                val granted = ensureLocationPermission(handler)
-                locationText = if (granted) {
-                    getCurrentLocation(provider)
-                } else {
-                    "Location permission not granted"
+            when (permissionGranted) {
+                true -> {
+                    // Fetch location once permission is granted
+                    LaunchedEffect("fetch_location") {
+                        val granted = ensureLocationPermission(handler)
+                        locationText = if (granted) {
+                            getCurrentLocation(provider)
+                        } else {
+                            "Location permission not granted"
+                        }
+                    }
+                    Text(text = locationText)
+                }
+                false, null -> {
+                    LocationPermissionScreen(
+                        onPermissionGranted = {
+                            permissionGranted = true
+                            locationText = "Requesting location..."
+                            viewModel.refreshWeather()
+                        },
+                        onPermissionDenied = {
+                            permissionGranted = false
+                        }
+                    )
                 }
             }
         }
