@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
+import org.envobyte.weatherforecast.presentation.screen.component.LocationPermissionScreen
 import org.envobyte.weatherforecast.presentation.screen.component.ShimmerEffect
 import org.envobyte.weatherforecast.presentation.theme.HomeScreenGradient
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
@@ -57,10 +58,21 @@ fun HomeScreen(
     val uiState by homeViewModel.uiState.collectAsState()
 
     Crossfade(
-        targetState = uiState.isLoading,
+        targetState = uiState,
         animationSpec = tween(durationMillis = 700)
-    ) { isLoading ->
-        if (isLoading) {
+    ) { state ->
+        if (state.error != null) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(state.error)
+            }
+        } else if (state.needLocationPermission == true) {
+            LocationPermissionScreen(
+                requestPermission = { homeViewModel.requestLocationPermission() }
+            )
+        } else if (state.isLoading) {
             ShimmerEffect()
         } else {
             uiState.weatherData?.let {
