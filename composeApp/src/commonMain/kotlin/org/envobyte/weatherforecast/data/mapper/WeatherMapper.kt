@@ -16,7 +16,7 @@ fun WeatherApiResponse.toWeatherData(): WeatherData {
 
 fun WeatherApiResponse.toWeatherInfo(): WeatherInfo {
     return WeatherInfo(
-        location = "Khulna",
+        location = "",
         greeting = getGreetingFromDateTime(current.time),
         temperature = "${current.temperature_2m.toInt()}${currentUnits.temperature_2m}",
         condition = mapWeatherCodeToCondition(current.weather_code),

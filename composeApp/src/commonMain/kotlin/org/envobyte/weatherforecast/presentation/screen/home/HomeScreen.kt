@@ -1,6 +1,7 @@
 package org.envobyte.weatherforecast.presentation.screen.home
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,7 +47,6 @@ import org.envobyte.weatherforecast.presentation.theme.WeatherIconGradient
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import weatherly.composeapp.generated.resources.Res
-import weatherly.composeapp.generated.resources.blur_sun
 import weatherly.composeapp.generated.resources.cloudy_weather
 import weatherly.composeapp.generated.resources.ic_cloudy_sun
 
@@ -56,7 +56,10 @@ fun HomeScreen(
 ) {
     val uiState by homeViewModel.uiState.collectAsState()
 
-    Crossfade(targetState = uiState.isLoading) { isLoading ->
+    Crossfade(
+        targetState = uiState.isLoading,
+        animationSpec = tween(durationMillis = 700)
+    ) { isLoading ->
         if (isLoading) {
             ShimmerEffect()
         } else {
@@ -80,7 +83,8 @@ fun HomeContent(locationName: String, weatherData: WeatherData) {
             modifier = Modifier.statusBarsPadding()
         )
         Text(
-            text = weatherData.current.icon, modifier = Modifier.align(
+            text = weatherData.current.icon,
+            modifier = Modifier.align(
                 Alignment.CenterEnd
             ).offset(x = 50.dp)
                 .blur(5.dp),

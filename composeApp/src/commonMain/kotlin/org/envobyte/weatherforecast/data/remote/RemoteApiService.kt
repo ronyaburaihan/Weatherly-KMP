@@ -1,6 +1,5 @@
 package org.envobyte.weatherforecast.data.remote
 
-import org.envobyte.weatherforecast.data.model.Address
 import org.envobyte.weatherforecast.data.model.GeoLocationResponse
 import org.envobyte.weatherforecast.data.model.WeatherApiResponse
 
