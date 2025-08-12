@@ -11,11 +11,9 @@ import platform.CoreLocation.kCLAuthorizationStatusRestricted
 import platform.darwin.NSObject
 import kotlin.coroutines.resume
 
-class IOSLocationPermissionHandler : NSObject(), CLLocationManagerDelegateProtocol,
-    LocationPermissionHandler {
-
+class IOSLocationManager : NSObject(), CLLocationManagerDelegateProtocol,
+    LocationManager {
     private val locationManager = CLLocationManager()
-
     override suspend fun requestLocationPermission(): PermissionStatus {
         locationManager.delegate = this
         return suspendCancellableCoroutine { cont ->
@@ -49,5 +47,9 @@ class IOSLocationPermissionHandler : NSObject(), CLLocationManagerDelegateProtoc
         val status = CLLocationManager.Companion.authorizationStatus()
         return status == kCLAuthorizationStatusAuthorizedAlways ||
                 status == kCLAuthorizationStatusAuthorizedWhenInUse
+    }
+
+    override suspend fun getCurrentLocation(): LocationData? {
+        return LocationProvider(locationManager).getCurrentLocation()
     }
 }
