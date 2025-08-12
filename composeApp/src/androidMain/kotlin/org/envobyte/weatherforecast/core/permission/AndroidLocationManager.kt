@@ -17,7 +17,6 @@ class AndroidLocationManager(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
-
         // If already granted, return immediately
         val alreadyGranted = permissions.all {
             ContextCompat.checkSelfPermission(activity, it) == PackageManager.PERMISSION_GRANTED

@@ -19,7 +19,6 @@ actual fun getPlatformLocationHandler(): LocationManager {
     val context = LocalContext.current
 
     var pending by remember { mutableStateOf<CompletableDeferred<PermissionStatus>?>(null) }
-
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { result: Map<String, Boolean> ->

@@ -13,9 +13,7 @@ import kotlin.coroutines.resume
 
 class IOSLocationManager : NSObject(), CLLocationManagerDelegateProtocol,
     LocationManager {
-
     private val locationManager = CLLocationManager()
-
     override suspend fun requestLocationPermission(): PermissionStatus {
         locationManager.delegate = this
         return suspendCancellableCoroutine { cont ->
