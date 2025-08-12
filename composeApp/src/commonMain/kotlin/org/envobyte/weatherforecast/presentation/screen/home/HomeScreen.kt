@@ -1,5 +1,6 @@
 package org.envobyte.weatherforecast.presentation.screen.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
-import org.envobyte.weatherforecast.presentation.screen.component.HomeLoadingPlaceholder
 import org.envobyte.weatherforecast.presentation.theme.HomeScreenGradient
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
 import org.envobyte.weatherforecast.presentation.theme.WeatherIconGradient
@@ -54,15 +54,18 @@ fun HomeScreen(
 ) {
     val uiState by homeViewModel.uiState.collectAsState()
 
-    if (uiState.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-    } else {
-        uiState.weatherData?.let {
-            HomeContent(
-                it
-            )
+    Crossfade(targetState = uiState.isLoading) { isLoading ->
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            uiState.weatherData?.let {
+                HomeContent(it)
+            }
         }
     }
 }
@@ -89,7 +92,7 @@ fun HomeContent(weatherData: WeatherData) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AppTopBar(
-                title = "Good morning",
+                title = weatherData.current.greeting,
                 subtitle = weatherData.current.date,
                 onMenuClick = {}
             )

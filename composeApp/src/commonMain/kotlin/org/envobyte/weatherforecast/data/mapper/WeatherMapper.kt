@@ -1,6 +1,7 @@
 package org.envobyte.weatherforecast.data.mapper
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import org.envobyte.weatherforecast.data.model.WeatherApiResponse
 import org.envobyte.weatherforecast.domain.model.ForecastDay
 import org.envobyte.weatherforecast.domain.model.WeatherData
@@ -16,6 +17,7 @@ fun WeatherApiResponse.toWeatherData(): WeatherData {
 fun WeatherApiResponse.toWeatherInfo(): WeatherInfo {
     return WeatherInfo(
         location = "Khulna",
+        greeting = getGreetingFromDateTime(current.time),
         temperature = "${current.temperature_2m.toInt()}${currentUnits.temperature_2m}",
         condition = mapWeatherCodeToCondition(current.weather_code),
         icon = mapWeatherCodeToIcon(current.weather_code),
@@ -87,6 +89,18 @@ fun formatDateString(dateString: String, includeYear: Boolean = false): String {
         "$dayOfWeek, ${date.day} $monthName ${date.year}"
     } else {
         "$dayOfWeek, ${date.day} $monthName"
+    }
+}
+
+fun getGreetingFromDateTime(dateTimeString: String): String {
+    val dateTime = LocalDateTime.parse(dateTimeString)
+    val hour = dateTime.hour
+
+    return when (hour) {
+        in 5..11 -> "Good Morning"
+        in 12..16 -> "Good Afternoon"
+        in 17..20 -> "Good Evening"
+        else -> "Good Night"
     }
 }
 
