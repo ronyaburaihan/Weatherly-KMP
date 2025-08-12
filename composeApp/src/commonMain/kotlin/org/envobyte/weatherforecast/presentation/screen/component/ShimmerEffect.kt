@@ -123,7 +123,7 @@ fun ShimmerForecastCard(
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 repeat(rows) {
                     Box(
-                        modifier = Modifier.fillMaxWidth().height(64.dp)
+                        modifier = Modifier.fillMaxWidth().height(54.dp)
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(28.dp))
                             .background(brush)
@@ -183,19 +183,16 @@ fun ShimmerEffect() {
             .statusBarsPadding()
             .navigationBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
     ) {
 
         Spacer(Modifier.height(16.dp))
         TopShimmer()
-        Spacer(Modifier.height(37.dp))
+        Spacer(Modifier.height(27.dp))
         Spacer(Modifier.height(12.dp))
         TemperatureShimmer()
-        Spacer(Modifier.height(36.dp))
+        Spacer(Modifier.height(26.dp))
         WeatherDetailsShimmer()
-        Spacer(Modifier.height(24.dp))
-
-        Spacer(Modifier.height(16.dp))
-        ShimmerForecastCard(rows = 3)
+        Spacer(Modifier.height(22.dp))
+        ShimmerForecastCard(rows = 4)
     }
 }
