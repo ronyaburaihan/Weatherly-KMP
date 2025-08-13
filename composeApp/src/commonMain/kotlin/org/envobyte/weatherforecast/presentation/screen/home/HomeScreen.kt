@@ -336,7 +336,8 @@ private fun DailyForCastItem(
                 .clickable {
                     onClick()
                 }
-                .padding(horizontal = 16.dp, vertical = 20.dp)
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = temperature,
@@ -349,6 +350,7 @@ private fun DailyForCastItem(
             Spacer(Modifier.width(12.dp))
             Text(
                 text = date,
+                modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.W400,
