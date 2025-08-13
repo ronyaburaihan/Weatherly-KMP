@@ -55,6 +55,7 @@ import org.envobyte.weatherforecast.presentation.screen.component.AppDrawerSheet
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
 import org.envobyte.weatherforecast.presentation.screen.component.LocationPermissionScreen
 import org.envobyte.weatherforecast.presentation.screen.component.ShimmerEffect
+import org.envobyte.weatherforecast.presentation.screen.component.SunriseSunsetCard
 import org.envobyte.weatherforecast.presentation.screen.component.WeatherIcon
 import org.envobyte.weatherforecast.presentation.theme.HomeScreenGradient
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
@@ -63,6 +64,10 @@ import org.koin.compose.viewmodel.koinViewModel
 import weatherly.composeapp.generated.resources.Res
 import weatherly.composeapp.generated.resources.cloudy_weather
 import weatherly.composeapp.generated.resources.ic_cloudy_sun
+import weatherly.composeapp.generated.resources.img_bg_sunrise
+import weatherly.composeapp.generated.resources.img_bg_sunset
+import weatherly.composeapp.generated.resources.img_sunrise
+import weatherly.composeapp.generated.resources.img_sunset
 
 @Composable
 fun HomeScreen(
@@ -186,6 +191,34 @@ fun HomeContent(locationName: String, weatherData: WeatherData, onClick: () -> U
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                             DailyForCast(weatherData, onClick = onClick)
+
+                            val todayForecast = weatherData.dailyForecasts.firstOrNull()
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                modifier = Modifier.padding(bottom = 30.dp)
+                                    .navigationBarsPadding()
+                            ) {
+                                SunriseSunsetCard(
+                                    icon = Res.drawable.img_sunrise,
+                                    title = "Sunrise",
+                                    data = todayForecast?.sunriseTime ?: "",
+                                    backgroundColor = Color(0xFFFFFFFF),
+                                    contentColor = Color(0xFF000000),
+                                    bottom = Res.drawable.img_bg_sunrise,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                SunriseSunsetCard(
+                                    icon = Res.drawable.img_sunset,
+                                    title = "Sunset",
+                                    data = todayForecast?.sunsetTime ?: "",
+                                    backgroundColor = Color(0xFFFFFFFF),
+                                    contentColor = Color(0xFF000000),
+                                    bottom = Res.drawable.img_bg_sunset,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+
+
                         }
                     }
                 }
@@ -289,7 +322,7 @@ private fun WeatherInfoItem(
 @Composable
 private fun DailyForCast(weatherData: WeatherData, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(bottom = 30.dp).navigationBarsPadding()
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             .background(Color.White.copy(.8f), shape = RoundedCornerShape(24.dp))
             .clip(RoundedCornerShape(24.dp)).padding(16.dp)
     ) {
