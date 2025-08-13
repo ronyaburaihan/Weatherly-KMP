@@ -69,10 +69,11 @@ private fun DrawerContent(weatherData: WeatherData, onDismiss: () -> Unit) {
         IconButton(onClick = {
             onDismiss()
 
-        }, modifier = Modifier.align(Alignment.TopStart).size(36.dp)) {
+        }, modifier = Modifier.align(Alignment.TopStart)) {
             Icon(
                 painterResource(Res.drawable.close),
                 contentDescription = null,
+                modifier = Modifier.size(24.dp)
             )
         }
         Column(
@@ -96,7 +97,7 @@ private fun DrawerContent(weatherData: WeatherData, onDismiss: () -> Unit) {
             Box(
                 modifier = Modifier
                     .background(Color.LightGray.copy(.3f)).height(1.dp)
-                    .widthIn(140.dp)
+                    .widthIn(190.dp)
             )
 
             Spacer(Modifier.height(36.dp))

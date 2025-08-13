@@ -5,10 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,10 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
@@ -48,6 +49,7 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.envobyte.weatherforecast.core.permission.getPlatformLocationHandler
 import org.envobyte.weatherforecast.domain.model.WeatherData
+import org.envobyte.weatherforecast.presentation.navigation.Screen
 import org.envobyte.weatherforecast.presentation.screen.component.AppDrawerSheet
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
 import org.envobyte.weatherforecast.presentation.screen.component.LocationPermissionScreen
@@ -102,14 +104,24 @@ fun HomeScreen(
                 HomeContent(
                     locationName = uiState.locationName ?: "",
                     weatherData = it,
+                    onClick = {
+                        navController.navigate(Screen.Details(date = it.current.date)) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(Screen.Home) {
+                                saveState = true
+                            }
+                        }
+                    }
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeContent(locationName: String, weatherData: WeatherData) {
+fun HomeContent(locationName: String, weatherData: WeatherData, onClick: () -> Unit) {
 
     val scope = rememberCoroutineScope()
     val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -126,7 +138,6 @@ fun HomeContent(locationName: String, weatherData: WeatherData) {
                             }
                         })
                 }
-
             },
             modifier = Modifier,
             drawerState = modalDrawerState,
@@ -161,20 +172,25 @@ fun HomeContent(locationName: String, weatherData: WeatherData) {
                                 }
                             }
                         )
-                        Spacer(Modifier.height(33.dp))
-                        TemperatureSection(
-                            locationName,
-                            weatherData.current.temperature,
-                            weatherData.current.condition
-                        )
-                        Spacer(Modifier.height(36.dp))
-                        WeatherDetailsCard(
-                            humidity = weatherData.current.humidity,
-                            windSpeed = weatherData.current.windSpeed,
-                            precipitation = weatherData.current.precipitation,
-                        )
-                        Spacer(Modifier.height(20.dp))
-                        DailyForCast(weatherData)
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState()),
+                        ) {
+                            Spacer(Modifier.height(33.dp))
+                            TemperatureSection(
+                                locationName,
+                                weatherData.current.temperature,
+                                weatherData.current.condition
+                            )
+                            Spacer(Modifier.height(36.dp))
+                            WeatherDetailsCard(
+                                humidity = weatherData.current.humidity,
+                                windSpeed = weatherData.current.windSpeed,
+                                precipitation = weatherData.current.precipitation,
+                            )
+                            Spacer(Modifier.height(20.dp))
+                            DailyForCast(weatherData, onClick = onClick)
+                        }
                     }
                 }
             }
@@ -275,7 +291,7 @@ private fun WeatherInfoItem(
 }
 
 @Composable
-private fun DailyForCast(weatherData: WeatherData) {
+private fun DailyForCast(weatherData: WeatherData, onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(bottom = 30.dp).navigationBarsPadding()
             .background(Color.White.copy(.8f), shape = RoundedCornerShape(24.dp))
@@ -285,29 +301,29 @@ private fun DailyForCast(weatherData: WeatherData) {
             "Next days",
             style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF8E8E8E))
         )
-        LazyColumn(
-            contentPadding = PaddingValues(top = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(weatherData.dailyForecasts) { item ->
-                DailyForCastItem(
-                    icon = item.icon,
-                    temperature = item.averageTemperature,
-                    date = item.formattedDate
-                )
-            }
+
+        weatherData.dailyForecasts.forEach { forecast ->
+            DailyForCastItem(
+                modifier = Modifier.padding(vertical = 8.dp),
+                icon = forecast.icon,
+                temperature = forecast.averageTemperature,
+                date = forecast.formattedDate,
+                onClick = onClick
+            )
         }
     }
 }
 
 @Composable
 private fun DailyForCastItem(
+    modifier: Modifier = Modifier,
     icon: String,
     temperature: String,
-    date: String
+    date: String,
+    onClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -317,6 +333,9 @@ private fun DailyForCastItem(
             modifier = Modifier.weight(1f)
                 .border(1.dp, color = Color.White, shape = RoundedCornerShape(360.dp))
                 .clip(RoundedCornerShape(360.dp))
+                .clickable {
+                    onClick()
+                }
                 .padding(horizontal = 16.dp, vertical = 20.dp)
         ) {
             Text(
