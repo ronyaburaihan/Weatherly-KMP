@@ -148,7 +148,8 @@ fun HomeContent(locationName: String, weatherData: WeatherData) {
                     )
 
                     Column(
-                        modifier = Modifier.fillMaxSize().padding(horizontal = 28.dp),
+                        modifier = Modifier.fillMaxSize()
+                            .padding(horizontal = 28.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         AppTopBar(

@@ -193,6 +193,6 @@ fun ShimmerEffect() {
         Spacer(Modifier.height(26.dp))
         WeatherDetailsShimmer()
         Spacer(Modifier.height(22.dp))
-        ShimmerForecastCard(rows = 4)
+        ShimmerForecastCard(rows = 5)
     }
 }

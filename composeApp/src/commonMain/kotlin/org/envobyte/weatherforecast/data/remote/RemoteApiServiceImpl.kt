@@ -48,6 +48,7 @@ class RemoteApiServiceImpl(private val httpClient: HttpClient) : RemoteApiServic
                 parameter("lon", lon)
                 parameter("format", "json")
                 parameter("addressdetails", 1)
+                parameter("accept-language", "en")
             }
             val geocodeResponse = response.body<GeoLocationResponse>()
             if (geocodeResponse.address == null)
