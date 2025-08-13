@@ -18,6 +18,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.toRoute
+import org.envobyte.weatherforecast.presentation.screen.details.DetailsScreen
 import org.envobyte.weatherforecast.presentation.screen.home.HomeScreen
 import org.envobyte.weatherforecast.presentation.screen.intro.IntroScreen
 
@@ -40,6 +42,7 @@ fun AppNavigation(
         setOf(
             Screen.Intro::class.qualifiedName,
             Screen.Home::class.qualifiedName,
+            Screen.Details::class.qualifiedName,
         )
     }
 
@@ -93,6 +96,10 @@ fun AppNavigation(
                 }
                 composable<Screen.Home> {
                     HomeScreen(navController = navController)
+                }
+                composable<Screen.Details> {
+                    val args = it.toRoute<Screen.Details>()
+                    DetailsScreen(date = args.date, navController = navController)
                 }
             }
         }
