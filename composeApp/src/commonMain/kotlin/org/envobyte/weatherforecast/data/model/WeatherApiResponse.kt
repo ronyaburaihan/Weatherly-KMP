@@ -57,7 +57,9 @@ data class DailyWeather(
     val weather_code: List<Int>,
     val temperature_2m_max: List<Double>,
     val temperature_2m_min: List<Double>,
-    val precipitation_sum: List<Double>
+    val precipitation_sum: List<Double>,
+    val sunrise: List<String>,
+    val sunset: List<String>
 )
 
 @Serializable

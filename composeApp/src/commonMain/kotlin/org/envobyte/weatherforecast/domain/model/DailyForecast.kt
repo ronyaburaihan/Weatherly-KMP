@@ -7,4 +7,6 @@ data class DailyForecast(
     val averageTemperature: String,
     val precipitation: String,
     val icon: String,
+    val sunriseTime: String,
+    val sunsetTime: String,
 )

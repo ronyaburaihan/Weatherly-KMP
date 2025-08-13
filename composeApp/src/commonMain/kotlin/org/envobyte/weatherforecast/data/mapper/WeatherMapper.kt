@@ -11,8 +11,8 @@ import org.envobyte.weatherforecast.domain.model.WeatherInfo
 fun WeatherApiResponse.toWeatherData(): WeatherData {
     return WeatherData(
         current = this.toWeatherInfo(),
-        forecast = this.toDailyForecast(),
-        hourly = this.toHourlyForecast()
+        dailyForecasts = this.toDailyForecast(),
+        hourlyForecasts = this.toHourlyForecast()
     )
 }
 
@@ -42,7 +42,9 @@ fun WeatherApiResponse.toDailyForecast(): List<DailyForecast> {
                 )
             }${dailyUnits.temperature_2m_max}",
             icon = mapWeatherCodeToIcon(daily.weather_code[index]),
-            precipitation = "${daily.precipitation_sum[index]}${dailyUnits.precipitation_sum}"
+            precipitation = "${daily.precipitation_sum[index]}${dailyUnits.precipitation_sum}",
+            sunriseTime = formatDayAndTime(daily.sunrise[index]),
+            sunsetTime = formatDayAndTime(daily.sunset[index])
         )
     }
 }
@@ -149,6 +151,24 @@ fun getGreetingFromDateTime(dateTimeString: String): String {
         in 17..20 -> "Good Evening"
         else -> "Good Night"
     }
+}
+
+fun formatDayAndTime(dateTimeString: String): String {
+    val dateTime = LocalDateTime.parse(dateTimeString)
+    val dayName = dateTime.dayOfWeek.name
+        .lowercase()
+        .replaceFirstChar { it.titlecase() }
+
+    val hour = dateTime.hour
+    val minute = dateTime.minute
+    val amPm = if (hour < 12) "AM" else "PM"
+    val hour12 = when {
+        hour == 0 -> 12
+        hour > 12 -> hour - 12
+        else -> hour
+    }
+
+    return "$dayName, $hour12:$minute$amPm"
 }
 
 

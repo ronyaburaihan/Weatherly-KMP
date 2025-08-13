@@ -289,7 +289,7 @@ private fun DailyForCast(weatherData: WeatherData) {
             contentPadding = PaddingValues(top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(weatherData.forecast) { item ->
+            items(weatherData.dailyForecasts) { item ->
                 DailyForCastItem(
                     icon = item.icon,
                     temperature = item.averageTemperature,

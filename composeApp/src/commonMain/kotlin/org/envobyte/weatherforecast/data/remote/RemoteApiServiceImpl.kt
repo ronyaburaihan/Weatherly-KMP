@@ -26,7 +26,7 @@ class RemoteApiServiceImpl(private val httpClient: HttpClient) : RemoteApiServic
                 )
                 parameter(
                     "daily",
-                    "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum"
+                    "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,sunrise,sunset"
                 )
                 parameter("timezone", "auto")
                 parameter("forecast_days", 7)
