@@ -1,11 +1,9 @@
 package org.envobyte.weatherforecast.domain.usecase
 
-import org.envobyte.weatherforecast.domain.repository.LocationRepository
+import org.envobyte.weatherforecast.core.permission.LocationManager
 
-class GetLocationPermissionStatusUseCase(
-    private val locationRepository: LocationRepository
-) {
-    suspend operator fun invoke(): Boolean {
-        return locationRepository.isLocationPermissionGranted()
+class GetLocationPermissionStatusUseCase() {
+    suspend operator fun invoke(locationManager: LocationManager): Boolean {
+        return locationManager.isLocationPermissionGranted()
     }
 }

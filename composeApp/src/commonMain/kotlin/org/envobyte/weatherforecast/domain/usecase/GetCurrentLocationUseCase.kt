@@ -1,12 +1,11 @@
 package org.envobyte.weatherforecast.domain.usecase
 
+import org.envobyte.weatherforecast.core.permission.LocationManager
 import org.envobyte.weatherforecast.domain.model.LocationData
-import org.envobyte.weatherforecast.domain.repository.LocationRepository
 
 class GetCurrentLocationUseCase(
-    private val locationRepository: LocationRepository
 ) {
-    suspend operator fun invoke(): Result<LocationData> {
-        return locationRepository.getCurrentLocation()
+    suspend operator fun invoke(locationManager: LocationManager): LocationData? {
+        return locationManager.getCurrentLocation()
     }
 }

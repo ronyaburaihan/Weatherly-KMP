@@ -6,13 +6,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.envobyte.weatherforecast.domain.model.LocationData
+import org.envobyte.weatherforecast.domain.model.PermissionState
 import kotlin.coroutines.resume
 
 class AndroidLocationManager(
     private val activity: ComponentActivity
 ) : LocationManager {
 
-    override suspend fun requestLocationPermission(): PermissionStatus {
+    override suspend fun requestLocationPermission(): PermissionState {
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -21,7 +23,7 @@ class AndroidLocationManager(
         val alreadyGranted = permissions.all {
             ContextCompat.checkSelfPermission(activity, it) == PackageManager.PERMISSION_GRANTED
         }
-        if (alreadyGranted) return PermissionStatus.GRANTED
+        if (alreadyGranted) return PermissionState.GRANTED
 
         return suspendCancellableCoroutine { cont ->
             val launcher = activity.activityResultRegistry.register(
@@ -29,7 +31,7 @@ class AndroidLocationManager(
                 ActivityResultContracts.RequestMultiplePermissions()
             ) { result: Map<String, Boolean> ->
                 val grantedNow = result.values.all { it }
-                val status = if (grantedNow) PermissionStatus.GRANTED else PermissionStatus.DENIED
+                val status = if (grantedNow) PermissionState.GRANTED else PermissionState.DENIED
                 if (cont.isActive) cont.resume(status)
             }
 

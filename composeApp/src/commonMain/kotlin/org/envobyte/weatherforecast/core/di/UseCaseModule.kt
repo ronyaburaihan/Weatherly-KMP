@@ -14,7 +14,7 @@ val useCaseModule = module {
     factory { SaveFirstTimeUseCase(get()) }
     factory { GetWeatherDataUseCase(get()) }
     factory { GetLocationNameUseCase(get()) }
-    factory { GetLocationPermissionStatusUseCase(get()) }
-    factory { RequestLocationPermissionUseCase(get()) }
-    factory { GetCurrentLocationUseCase(get()) }
+    factory { GetLocationPermissionStatusUseCase() }
+    factory { RequestLocationPermissionUseCase() }
+    factory { GetCurrentLocationUseCase() }
 }

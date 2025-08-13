@@ -7,6 +7,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.envobyte.weatherforecast.domain.model.LocationData
 import kotlin.coroutines.resume
 
 actual class LocationProvider actual constructor(
