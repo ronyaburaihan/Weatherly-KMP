@@ -51,6 +51,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.serialization.json.Json
+import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.theme.WeatherIconGradient
 import org.jetbrains.compose.resources.painterResource
 import weatherly.composeapp.generated.resources.Res
@@ -258,11 +260,18 @@ private fun sampleCatmullRom(points: List<Offset>, stepsPerSegment: Int): List<O
 
 
 @Composable
-fun DetailsScreen(date: String, navController: NavHostController) {
-    DetailsContent(date = date, onClick = {
-        navController.navigateUp()
+fun DetailsScreen(
+    navController: NavHostController,
+    weatherJson: String
+) {
+    val weatherData = Json.decodeFromString<WeatherData>(weatherJson)
 
-    })
+    DetailsContent(
+        date = weatherData.current.date,
+        onClick = {
+            navController.navigateUp()
+        }
+    )
 }
 
 @Composable
@@ -274,7 +283,7 @@ fun DetailsContent(
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(onClick = onClick)
         Column(modifier = Modifier.fillMaxWidth()) {
-            Text("Details", modifier = Modifier.padding(start = 16.dp))
+            Text("Date", modifier = Modifier.padding(start = 16.dp))
             Spacer(Modifier.height(16.dp))
             DateTemperatureEntry()
             Spacer(Modifier.height(16.dp))
@@ -294,11 +303,7 @@ private fun WeatherDescription() {
             .padding(12.dp),
     ) {
         Text(
-            "" +
-                    "The weather forecast for today is mostly sunny " +
-                    "with a mild temperature drop. The high will be" +
-                    "around 25°C and the low will be around 19°C. A" +
-                    "slight chance of rain is expected in the afternoon",
+            "The weather forecast for today is mostly sunny with a mild temperature drop. The high will be around 25°C and the low will be around 19°C. A slight chance of rain is expected in the afternoon",
             style = MaterialTheme.typography.bodyMedium
         )
     }
@@ -334,13 +339,16 @@ fun DateTemperatureEntry() {
 @Composable
 private fun TopBar(onClick: () -> Unit) {
     TopAppBar(
-        title = { Text("Details") },
+        title = {
+            Text(
+                text = "Hourly Forecast",
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
         modifier = Modifier,
         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
         navigationIcon = {
-            IconButton(onClick = {
-                onClick()
-            }) {
+            IconButton(onClick = { onClick()}) {
                 Icon(
                     painterResource(Res.drawable.ic_back),
                     contentDescription = null,

@@ -29,7 +29,7 @@ fun AppNavigation(
 ) {
     val backstackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = remember(backstackEntry) {
-        backstackEntry?.destination?.route?.substringBefore("?")
+        backstackEntry?.destination?.route?.substringBefore("?")?.substringBefore("/")
     }
 
     val topBarScreens = remember {
@@ -98,8 +98,8 @@ fun AppNavigation(
                     HomeScreen(navController = navController)
                 }
                 composable<Screen.Details> {
-                    val args = it.toRoute<Screen.Details>()
-                    DetailsScreen(date = args.date, navController = navController)
+                    val weatherJson = it.toRoute<Screen.Details>().weatherJson
+                    DetailsScreen(navController = navController, weatherJson = weatherJson)
                 }
             }
         }

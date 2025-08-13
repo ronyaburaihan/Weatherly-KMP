@@ -12,5 +12,5 @@ sealed class Screen {
     data object Home : Screen()
 
     @Serializable
-    data class Details(val date : String) : Screen()
+    data class Details(val weatherJson: String) : Screen()
 }

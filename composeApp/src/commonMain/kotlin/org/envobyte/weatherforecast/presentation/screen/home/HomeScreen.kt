@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import org.envobyte.weatherforecast.core.permission.getPlatformLocationHandler
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.navigation.Screen
@@ -105,13 +106,8 @@ fun HomeScreen(
                     locationName = uiState.locationName ?: "",
                     weatherData = it,
                     onClick = {
-                        navController.navigate(Screen.Details(date = it.current.date)) {
-                            launchSingleTop = true
-                            restoreState = true
-                            popUpTo(Screen.Home) {
-                                saveState = true
-                            }
-                        }
+                        val weatherJson = Json.encodeToString(it)
+                        navController.navigate(Screen.Details(weatherJson = weatherJson))
                     }
                 )
             }
@@ -176,19 +172,19 @@ fun HomeContent(locationName: String, weatherData: WeatherData, onClick: () -> U
                             modifier = Modifier
                                 .verticalScroll(rememberScrollState()),
                         ) {
-                            Spacer(Modifier.height(33.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
                             TemperatureSection(
                                 locationName,
                                 weatherData.current.temperature,
                                 weatherData.current.condition
                             )
-                            Spacer(Modifier.height(36.dp))
+                            Spacer(modifier = Modifier.height(30.dp))
                             WeatherDetailsCard(
                                 humidity = weatherData.current.humidity,
                                 windSpeed = weatherData.current.windSpeed,
                                 precipitation = weatherData.current.precipitation,
                             )
-                            Spacer(Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
                             DailyForCast(weatherData, onClick = onClick)
                         }
                     }

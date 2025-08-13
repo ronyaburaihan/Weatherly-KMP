@@ -1,5 +1,8 @@
 package org.envobyte.weatherforecast.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class DailyForecast(
     val formattedDate: String,
     val maxTemperature: String,

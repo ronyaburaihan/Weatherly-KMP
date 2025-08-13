@@ -1,5 +1,8 @@
 package org.envobyte.weatherforecast.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class WeatherInfo(
     val greeting: String,
     val temperature: String,
