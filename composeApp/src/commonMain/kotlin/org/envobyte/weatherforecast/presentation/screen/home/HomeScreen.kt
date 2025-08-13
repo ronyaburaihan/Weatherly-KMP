@@ -22,28 +22,36 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 import org.envobyte.weatherforecast.domain.model.WeatherData
+import org.envobyte.weatherforecast.presentation.screen.component.AppDrawerSheet
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
 import org.envobyte.weatherforecast.presentation.screen.component.ShimmerEffect
+import org.envobyte.weatherforecast.presentation.screen.component.WeatherIcon
 import org.envobyte.weatherforecast.presentation.theme.HomeScreenGradient
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
-import org.envobyte.weatherforecast.presentation.theme.WeatherIconGradient
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import weatherly.composeapp.generated.resources.Res
@@ -66,7 +74,7 @@ fun HomeScreen(
             uiState.weatherData?.let {
                 HomeContent(
                     locationName = uiState.locationName ?: "",
-                    weatherData = it
+                    weatherData = it,
                 )
             }
         }
@@ -76,44 +84,72 @@ fun HomeScreen(
 @Composable
 fun HomeContent(locationName: String, weatherData: WeatherData) {
 
-    Box(modifier = Modifier.fillMaxSize().background(HomeScreenGradient)) {
-        Image(
-            painterResource(Res.drawable.cloudy_weather),
-            contentDescription = null,
-            modifier = Modifier.statusBarsPadding()
-        )
-        Text(
-            text = weatherData.current.icon,
-            modifier = Modifier.align(
-                Alignment.CenterEnd
-            ).offset(x = 50.dp)
-                .blur(5.dp),
-            fontSize = 550.sp
-        )
+    val scope = rememberCoroutineScope()
+    val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        ModalNavigationDrawer(
+            drawerContent = {
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                    AppDrawerSheet(
+                        drawerState = modalDrawerState,
+                        weatherData = weatherData,
+                        onDismiss = {
+                            scope.launch {
+                                modalDrawerState.close()
+                            }
+                        })
+                }
 
-        Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 28.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            },
+            modifier = Modifier,
+            drawerState = modalDrawerState,
         ) {
-            AppTopBar(
-                title = weatherData.current.greeting,
-                subtitle = weatherData.current.date,
-                onMenuClick = {}
-            )
-            Spacer(Modifier.height(33.dp))
-            TemperatureSection(
-                locationName,
-                weatherData.current.temperature,
-                weatherData.current.condition
-            )
-            Spacer(Modifier.height(36.dp))
-            WeatherDetailsCard(
-                humidity = weatherData.current.humidity,
-                windSpeed = weatherData.current.windSpeed,
-                precipitation = weatherData.current.precipitation,
-            )
-            Spacer(Modifier.height(20.dp))
-            DailyForCast(weatherData)
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Box(modifier = Modifier.fillMaxSize().background(HomeScreenGradient)) {
+                    Image(
+                        painterResource(Res.drawable.cloudy_weather),
+                        contentDescription = null,
+                        modifier = Modifier.statusBarsPadding()
+                    )
+                    Text(
+                        text = weatherData.current.icon,
+                        modifier = Modifier.align(
+                            Alignment.CenterEnd
+                        ).offset(x = 50.dp)
+                            .blur(5.dp),
+                        fontSize = 550.sp
+                    )
+
+                    Column(
+                        modifier = Modifier.fillMaxSize().padding(horizontal = 28.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        AppTopBar(
+                            title = weatherData.current.greeting,
+                            subtitle = weatherData.current.date,
+                            onMenuClick = {
+                                scope.launch {
+                                    modalDrawerState.open()
+                                }
+                            }
+                        )
+                        Spacer(Modifier.height(33.dp))
+                        TemperatureSection(
+                            locationName,
+                            weatherData.current.temperature,
+                            weatherData.current.condition
+                        )
+                        Spacer(Modifier.height(36.dp))
+                        WeatherDetailsCard(
+                            humidity = weatherData.current.humidity,
+                            windSpeed = weatherData.current.windSpeed,
+                            precipitation = weatherData.current.precipitation,
+                        )
+                        Spacer(Modifier.height(20.dp))
+                        DailyForCast(weatherData)
+                    }
+                }
+            }
         }
     }
 }
@@ -245,17 +281,7 @@ private fun DailyForCastItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box(
-            modifier = Modifier.size(64.dp).background(
-                WeatherIconGradient, shape = CircleShape
-            ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = icon,
-                fontSize = 30.sp
-            )
-        }
+        WeatherIcon(icon = icon)
         Spacer(Modifier.width(12.dp))
         Row(
             modifier = Modifier.weight(1f)
