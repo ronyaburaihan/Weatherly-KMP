@@ -41,6 +41,7 @@ val networkModule = module {
 
             install(DefaultRequest) {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
+                header(HttpHeaders.AcceptLanguage, "en")
             }
         }
     }

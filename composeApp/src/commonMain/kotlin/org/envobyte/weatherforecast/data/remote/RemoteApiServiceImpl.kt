@@ -30,6 +30,7 @@ class RemoteApiServiceImpl(private val httpClient: HttpClient) : RemoteApiServic
                 )
                 parameter("timezone", "auto")
                 parameter("forecast_days", 7)
+                parameter("hourly", "temperature_2m,weather_code")
             }
             Result.success(response.body<WeatherApiResponse>())
         } catch (e: Exception) {
@@ -48,7 +49,6 @@ class RemoteApiServiceImpl(private val httpClient: HttpClient) : RemoteApiServic
                 parameter("lon", lon)
                 parameter("format", "json")
                 parameter("addressdetails", 1)
-                parameter("accept-language", "en")
             }
             val geocodeResponse = response.body<GeoLocationResponse>()
             if (geocodeResponse.address == null)

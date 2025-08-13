@@ -4,7 +4,7 @@ import org.envobyte.weatherforecast.data.mapper.toCurrentWeather
 import org.envobyte.weatherforecast.data.mapper.toForecast
 import org.envobyte.weatherforecast.data.mapper.toWeatherData
 import org.envobyte.weatherforecast.data.remote.RemoteApiService
-import org.envobyte.weatherforecast.domain.model.ForecastDay
+import org.envobyte.weatherforecast.domain.model.DailyForecast
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.domain.model.WeatherInfo
 import org.envobyte.weatherforecast.domain.repository.WeatherRepository
@@ -30,7 +30,7 @@ class WeatherRepositoryImpl(
         }
     }
 
-    override suspend fun getForecast(lat: Double, lon: Double): Result<List<ForecastDay>> {
+    override suspend fun getForecast(lat: Double, lon: Double): Result<List<DailyForecast>> {
         return try {
             val apiResult = apiService.getCurrentWeatherAndForecast(lat, lon)
 

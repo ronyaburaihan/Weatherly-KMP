@@ -15,7 +15,9 @@ data class WeatherApiResponse(
     @SerialName("current_units") val currentUnits: CurrentUnits,
     val current: CurrentWeather,
     @SerialName("daily_units") val dailyUnits: DailyUnits,
-    val daily: DailyWeather
+    val daily: DailyWeather,
+    @SerialName("hourly_units") val hourlyUnits: HourlyUnits,
+    val hourly: HourlyWeather
 )
 
 @Serializable
@@ -56,4 +58,22 @@ data class DailyWeather(
     val temperature_2m_max: List<Double>,
     val temperature_2m_min: List<Double>,
     val precipitation_sum: List<Double>
+)
+
+@Serializable
+data class HourlyWeather(
+    val time: List<String>,
+    @SerialName("temperature_2m")
+    val temperature: List<Double>,
+    @SerialName("weather_code")
+    val weatherCode: List<Int>
+)
+
+@Serializable
+data class HourlyUnits(
+    val time: String,
+    @SerialName("temperature_2m")
+    val temperature: String,
+    @SerialName("weather_code")
+    val weatherCode: String
 )

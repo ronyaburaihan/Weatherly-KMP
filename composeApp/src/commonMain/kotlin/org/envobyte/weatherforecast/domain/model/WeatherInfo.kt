@@ -1,7 +1,6 @@
 package org.envobyte.weatherforecast.domain.model
 
 data class WeatherInfo(
-    val location: String,
     val greeting: String,
     val temperature: String,
     val condition: String,

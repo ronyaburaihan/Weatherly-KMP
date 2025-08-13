@@ -3,20 +3,21 @@ package org.envobyte.weatherforecast.data.mapper
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.envobyte.weatherforecast.data.model.WeatherApiResponse
-import org.envobyte.weatherforecast.domain.model.ForecastDay
+import org.envobyte.weatherforecast.domain.model.DailyForecast
+import org.envobyte.weatherforecast.domain.model.HourlyForecast
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.domain.model.WeatherInfo
 
 fun WeatherApiResponse.toWeatherData(): WeatherData {
     return WeatherData(
         current = this.toWeatherInfo(),
-        forecast = this.toForecastDays()
+        forecast = this.toDailyForecast(),
+        hourly = this.toHourlyForecast()
     )
 }
 
 fun WeatherApiResponse.toWeatherInfo(): WeatherInfo {
     return WeatherInfo(
-        location = "",
         greeting = getGreetingFromDateTime(current.time),
         temperature = "${current.temperature_2m.toInt()}${currentUnits.temperature_2m}",
         condition = mapWeatherCodeToCondition(current.weather_code),
@@ -28,18 +29,59 @@ fun WeatherApiResponse.toWeatherInfo(): WeatherInfo {
     )
 }
 
-fun WeatherApiResponse.toForecastDays(): List<ForecastDay> {
+fun WeatherApiResponse.toDailyForecast(): List<DailyForecast> {
     return daily.time.mapIndexed { index, dateString ->
-        ForecastDay(
-            formattedDate = formatDateString(dateString),
-            temperature = averageTemperature(
-                daily.temperature_2m_max[index].toInt(),
-                daily.temperature_2m_min[index].toInt()
-            ),
+        DailyForecast(
+            formattedDate = formatDateString(daily.time[index].substringBefore("T"), false),
+            maxTemperature = "${daily.temperature_2m_max[index]}${dailyUnits.temperature_2m_max}.",
+            minTemperature = "${daily.temperature_2m_min[index]}${dailyUnits.temperature_2m_min}",
+            averageTemperature = "${
+                averageTemperature(
+                    daily.temperature_2m_max[index].toInt(),
+                    daily.temperature_2m_min[index].toInt()
+                )
+            }${dailyUnits.temperature_2m_max}",
             icon = mapWeatherCodeToIcon(daily.weather_code[index]),
-            precipitation = daily.precipitation_sum[index].toInt()
+            precipitation = "${daily.precipitation_sum[index]}${dailyUnits.precipitation_sum}"
         )
     }
+}
+
+fun WeatherApiResponse.toHourlyForecast(): List<HourlyForecast> {
+    return hourly.time.mapIndexed { index, dateString ->
+        val (dayName, monthName, date) = formatDateDay(hourly.time[index].substringBefore("T"))
+        HourlyForecast(
+            shortDate = date,
+            shortDayName = dayName,
+            longDate = formatDateString(
+                hourly.time[index].substringBefore("T"),
+                isShortDayName = true
+            ),
+            formattedTime = formatHourTime(dateString),
+            temperature = hourly.temperature[index],
+            temperatureUnit = hourlyUnits.temperature,
+            icon = mapWeatherCodeToIcon(hourly.weatherCode[index])
+        )
+    }
+}
+
+private fun formatHourTime(dateTimeString: String): String {
+    val hour = LocalDateTime.parse(dateTimeString).hour
+    return when {
+        hour == 0 -> "12AM"
+        hour < 12 -> "${hour}AM"
+        hour == 12 -> "12PM"
+        else -> "${hour - 12}PM"
+    }
+}
+
+private fun formatDateDay(dateTimeString: String): Triple<String, String, String> {
+    val date = LocalDate.parse(dateTimeString)
+    val dayOfWeek = date.dayOfWeek.name.take(1).uppercase()
+    val monthName = date.month.name.take(3).lowercase()
+        .replaceFirstChar { it.titlecase() }
+    val dayOfMonth = date.day.toString()
+    return Triple(dayOfWeek, monthName, dayOfMonth)
 }
 
 private fun averageTemperature(toInt: Int, toInt2: Int): Int {
@@ -77,10 +119,15 @@ private fun mapWeatherCodeToIcon(code: Int): String {
     }
 }
 
-fun formatDateString(dateString: String, includeYear: Boolean = false): String {
+fun formatDateString(
+    dateString: String,
+    isShortDayName: Boolean = false,
+    includeYear: Boolean = false
+): String {
     val date = LocalDate.parse(dateString)
 
     val dayOfWeek = date.dayOfWeek.name.lowercase()
+        .let { if (isShortDayName) it.take(3) else it }
         .replaceFirstChar { it.titlecase() }
     val monthName = date.month.name.take(3).lowercase()
         .replaceFirstChar { it.titlecase() }
@@ -107,4 +154,4 @@ fun getGreetingFromDateTime(dateTimeString: String): String {
 
 // Extension functions for easier mapping in repository
 fun WeatherApiResponse.toCurrentWeather(): WeatherInfo = this.toWeatherInfo()
-fun WeatherApiResponse.toForecast(): List<ForecastDay> = this.toForecastDays()
+fun WeatherApiResponse.toForecast(): List<DailyForecast> = this.toDailyForecast()

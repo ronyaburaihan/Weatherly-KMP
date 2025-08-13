@@ -193,7 +193,8 @@ fun TemperatureSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            locationName, style = MaterialTheme.typography.titleLarge.copy(
+            text = locationName,
+            style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.W500,
                 color = PrimaryTextColor
             )
@@ -207,7 +208,8 @@ fun TemperatureSection(
             )
         )
         Text(
-            weatherCondition, style = MaterialTheme.typography.bodySmall.copy(
+            text = weatherCondition,
+            style = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.W400,
                 color = PrimaryTextColor
             )
@@ -287,10 +289,10 @@ private fun DailyForCast(weatherData: WeatherData) {
             contentPadding = PaddingValues(top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(weatherData.forecast, key = { item -> item.formattedDate }) { item ->
+            items(weatherData.forecast) { item ->
                 DailyForCastItem(
                     icon = item.icon,
-                    temperature = item.temperature.toString(),
+                    temperature = item.averageTemperature,
                     date = item.formattedDate
                 )
             }
@@ -318,8 +320,11 @@ private fun DailyForCastItem(
                 .padding(horizontal = 16.dp, vertical = 20.dp)
         ) {
             Text(
-                "$temperature°", style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 20.sp, fontWeight = FontWeight.W500, color = PrimaryTextColor
+                text = temperature,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.W500,
+                    color = PrimaryTextColor
                 )
             )
             Spacer(Modifier.width(12.dp))
