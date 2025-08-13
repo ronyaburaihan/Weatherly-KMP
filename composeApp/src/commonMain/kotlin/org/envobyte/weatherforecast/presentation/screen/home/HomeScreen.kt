@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,8 +39,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import org.envobyte.weatherforecast.core.permission.getPlatformLocationHandler
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
+import org.envobyte.weatherforecast.presentation.screen.component.LocationPermissionScreen
 import org.envobyte.weatherforecast.presentation.screen.component.ShimmerEffect
 import org.envobyte.weatherforecast.presentation.theme.HomeScreenGradient
 import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
@@ -52,15 +55,39 @@ import weatherly.composeapp.generated.resources.ic_cloudy_sun
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController, homeViewModel: HomeViewModel = koinViewModel()
+    navController: NavHostController,
+    homeViewModel: HomeViewModel = koinViewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsState()
+    val locationManager = getPlatformLocationHandler()
+
+    LaunchedEffect(Unit) {
+        homeViewModel.checkLocationPermission(locationManager)
+    }
+
+    LaunchedEffect(uiState.needLocationPermission) {
+        if (uiState.needLocationPermission == false) {
+            homeViewModel.requestCurrentLocation(locationManager)
+        }
+    }
 
     Crossfade(
-        targetState = uiState.isLoading,
+        targetState = uiState,
         animationSpec = tween(durationMillis = 700)
-    ) { isLoading ->
-        if (isLoading) {
+    ) { state ->
+        if (state.error != null) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+                    .padding(20.dp)
+            ) {
+                Text(state.error)
+            }
+        } else if (state.needLocationPermission == true) {
+            LocationPermissionScreen(
+                requestPermission = { homeViewModel.requestLocationPermission(locationManager) }
+            )
+        } else if (state.isLoading) {
             ShimmerEffect()
         } else {
             uiState.weatherData?.let {

@@ -1,9 +1,6 @@
 package org.envobyte.weatherforecast.core.permission
 
-data class LocationData(
-    val latitude: Double,
-    val longitude: Double
-)
+import org.envobyte.weatherforecast.domain.model.LocationData
 
 expect class LocationProvider(context:Any?) {
     suspend fun getCurrentLocation(): LocationData?

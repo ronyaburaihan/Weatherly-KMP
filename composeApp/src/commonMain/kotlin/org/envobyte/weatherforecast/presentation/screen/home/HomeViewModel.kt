@@ -6,74 +6,96 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.envobyte.weatherforecast.core.permission.LocationManager
+import org.envobyte.weatherforecast.domain.model.LocationData
+import org.envobyte.weatherforecast.domain.model.PermissionState
 import org.envobyte.weatherforecast.domain.model.WeatherData
+import org.envobyte.weatherforecast.domain.usecase.GetCurrentLocationUseCase
 import org.envobyte.weatherforecast.domain.usecase.GetLocationNameUseCase
+import org.envobyte.weatherforecast.domain.usecase.GetLocationPermissionStatusUseCase
 import org.envobyte.weatherforecast.domain.usecase.GetWeatherDataUseCase
+import org.envobyte.weatherforecast.domain.usecase.RequestLocationPermissionUseCase
 
 class HomeViewModel(
     private val getWeatherDataUseCase: GetWeatherDataUseCase,
     private val getLocationNameUseCase: GetLocationNameUseCase,
+    private val getPermissionStatusUseCase: GetLocationPermissionStatusUseCase,
+    private val requestLocationPermissionUseCase: RequestLocationPermissionUseCase,
+    private val getCurrentLocationUseCase: GetCurrentLocationUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    init {
-        loadWeatherData()
-        loadLocationName()
-        //checkLocationPermissionAndLoadWeather()
+    fun checkLocationPermission(locationManager: LocationManager) {
+        viewModelScope.launch {
+            val granted = getPermissionStatusUseCase(locationManager)
+            _uiState.value = _uiState.value.copy(
+                needLocationPermission = !granted
+            )
+        }
     }
 
-    private fun loadLocationName() {
+    fun requestCurrentLocation(locationManager: LocationManager) {
         viewModelScope.launch {
-            val locationName = getLocationNameUseCase(
-                lat = 22.8373,
-                lon = 89.5400
-            ).getOrNull()
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                error = null
+            )
+            val locationData = getCurrentLocationUseCase(locationManager)
+            println("Location Data: $locationData")
+            if (locationData != null) {
+                loadWeatherDataAndLocationName(locationData)
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    error = "Location data is null"
+                )
+            }
+        }
+    }
+
+    private fun loadWeatherDataAndLocationName(locationData: LocationData) {
+        loadWeatherData(locationData)
+        loadLocationName(locationData)
+    }
+
+    fun requestLocationPermission(locationManager: LocationManager) {
+        println("Requesting location permission")
+        viewModelScope.launch {
+            val permissionState = requestLocationPermissionUseCase(locationManager)
+            println("Permission State: $permissionState")
+
+            when (permissionState) {
+                PermissionState.GRANTED -> {
+                    _uiState.value = _uiState.value.copy(needLocationPermission = false)
+                }
+
+                PermissionState.NOT_DETERMINED -> {
+                    _uiState.value = _uiState.value.copy(needLocationPermission = true)
+                }
+
+                else -> {
+                    _uiState.value = _uiState.value.copy(
+                        needLocationPermission = true,
+                        error = "Location permission denied you need enable it in settings"
+                    )
+                }
+            }
+        }
+    }
+
+    private fun loadLocationName(locationData: LocationData) {
+        viewModelScope.launch {
+            val locationName = getLocationNameUseCase(locationData).getOrNull()
             _uiState.value = _uiState.value.copy(
                 locationName = locationName
             )
         }
     }
 
-    fun refreshWeather() {
-        loadWeatherData()
-    }
-
-    /*fun requestLocationPermission() {
+    private fun loadWeatherData(locationData: LocationData) {
         viewModelScope.launch {
-            val granted = locationService.requestLocationPermission()
-            if (granted) {
-                loadWeatherData()
-            } else {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = "Location permission is required to get weather data"
-                )
-            }
-        }
-    }
-
-    private fun checkLocationPermissionAndLoadWeather() {
-        if (locationService.hasLocationPermission()) {
-            loadWeatherData()
-        } else {
-            _uiState.value = _uiState.value.copy(
-                isLoading = false,
-                needsLocationPermission = true
-            )
-        }
-    }*/
-
-    private fun loadWeatherData() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                error = null,
-                needsLocationPermission = false
-            )
-
-            getWeatherDataUseCase().fold(
+            getWeatherDataUseCase(locationData).fold(
                 onSuccess = { weatherData ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
@@ -97,5 +119,5 @@ data class HomeUiState(
     val weatherData: WeatherData? = null,
     val locationName: String? = null,
     val error: String? = null,
-    val needsLocationPermission: Boolean = false
+    val needLocationPermission: Boolean? = null
 )

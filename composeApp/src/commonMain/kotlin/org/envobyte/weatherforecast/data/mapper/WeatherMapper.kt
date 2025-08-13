@@ -93,12 +93,12 @@ fun formatDateString(dateString: String, includeYear: Boolean = false): String {
 }
 
 fun getGreetingFromDateTime(dateTimeString: String): String {
-    val dateTime = LocalDateTime.parse(dateTimeString)
-    val hour = dateTime.hour
-
+    val hour = LocalDateTime.parse(dateTimeString).hour
     return when (hour) {
+        in 0..4 -> "Late Night"
         in 5..11 -> "Good Morning"
-        in 12..16 -> "Good Afternoon"
+        12 -> "Good Noon"
+        in 13..16 -> "Good Afternoon"
         in 17..20 -> "Good Evening"
         else -> "Good Night"
     }
