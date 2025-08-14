@@ -54,6 +54,7 @@ import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.navigation.Screen
 import org.envobyte.weatherforecast.presentation.screen.component.AppDrawerSheet
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
+import org.envobyte.weatherforecast.presentation.screen.component.DrawerItem
 import org.envobyte.weatherforecast.presentation.screen.component.LocationPermissionScreen
 import org.envobyte.weatherforecast.presentation.screen.component.ShimmerEffect
 import org.envobyte.weatherforecast.presentation.screen.component.SunriseSunsetCard
@@ -115,6 +116,26 @@ fun HomeScreen(
                     onClick = {
                         val weatherJson = Json.encodeToString(it)
                         navController.navigate(Screen.Details(weatherJson = weatherJson))
+                    },
+                    drawerItemsClick = { item ->
+                        when (item) {
+                            DrawerItem.FEEDBACK -> {
+                                navController.navigate(Screen.Feedback)
+                                print("Feedback clicked")
+                            }
+                            DrawerItem.FAQ -> {
+                                // Handle Faq click
+                            }
+                            DrawerItem.SETTINGS -> {
+                                // Handle Settings click
+                            }
+                            DrawerItem.UPDATE -> {
+                                // Handle Update click
+                            }
+                            DrawerItem.WEATHER_INFO -> {
+                                // Handle Weather Info click
+                            }
+                        }
                     }
                 )
             }
@@ -127,10 +148,10 @@ fun HomeScreen(
 fun HomeContent(
     locationName: String,
     weatherData: WeatherData,
+    drawerItemsClick: (DrawerItem) -> Unit
     todayForecast: DailyForecast?,
     onClick: () -> Unit
 ) {
-
     val scope = rememberCoroutineScope()
     val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -143,6 +164,12 @@ fun HomeContent(
                         onDismiss = {
                             scope.launch {
                                 modalDrawerState.close()
+                            }
+                        },
+                        onClick = {
+                            scope.launch {
+                                modalDrawerState.close()
+                                drawerItemsClick(it)
                             }
                         }
                     )
