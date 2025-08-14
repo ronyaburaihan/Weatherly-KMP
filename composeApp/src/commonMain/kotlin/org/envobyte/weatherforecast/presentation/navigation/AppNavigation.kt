@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
+import org.envobyte.weatherforecast.AppViewModel
 import org.envobyte.weatherforecast.presentation.screen.details.DetailsScreen
 import org.envobyte.weatherforecast.presentation.screen.home.HomeScreen
 import org.envobyte.weatherforecast.presentation.screen.intro.IntroScreen
@@ -26,6 +28,7 @@ import org.envobyte.weatherforecast.presentation.screen.intro.IntroScreen
 @Composable
 fun AppNavigation(
     navController: NavHostController,
+    initialScreen: Screen,
 ) {
     val backstackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = remember(backstackEntry) {
@@ -88,7 +91,7 @@ fun AppNavigation(
         ) {
             NavHost(
                 navController = navController,
-                startDestination = Screen.Intro,
+                startDestination = initialScreen,
                 modifier = Modifier.fillMaxSize(),
             ) {
                 composable<Screen.Intro> {
