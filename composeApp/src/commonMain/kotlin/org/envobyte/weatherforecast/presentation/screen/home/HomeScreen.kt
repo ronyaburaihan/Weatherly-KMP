@@ -82,7 +82,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(uiState.needLocationPermission) {
-        if (uiState.needLocationPermission == false) {
+        if (uiState.needLocationPermission == false && uiState.weatherData == null) {
             homeViewModel.requestCurrentLocation(locationManager)
         }
     }
@@ -137,7 +137,8 @@ fun HomeContent(locationName: String, weatherData: WeatherData, onClick: () -> U
                             scope.launch {
                                 modalDrawerState.close()
                             }
-                        })
+                        }
+                    )
                 }
             },
             modifier = Modifier,
