@@ -47,7 +47,7 @@ fun SunriseSunsetCard(
         Column(
             modifier = Modifier
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 modifier = Modifier.padding(
@@ -67,7 +67,7 @@ fun SunriseSunsetCard(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        color = contentColor
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
             }
@@ -81,7 +81,6 @@ fun SunriseSunsetCard(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium
             )
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
