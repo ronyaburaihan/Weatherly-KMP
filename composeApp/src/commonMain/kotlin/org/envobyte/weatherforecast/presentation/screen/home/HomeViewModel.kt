@@ -27,7 +27,12 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
+    private var hasCheckedPermission = false
+
     fun checkLocationPermission(locationManager: LocationManager) {
+        if (hasCheckedPermission) return
+        hasCheckedPermission = true
+
         viewModelScope.launch {
             val granted = getPermissionStatusUseCase(locationManager)
             _uiState.value = _uiState.value.copy(

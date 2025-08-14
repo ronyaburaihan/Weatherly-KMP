@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -24,8 +22,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.envobyte.weatherforecast.presentation.navigation.Screen
 import org.envobyte.weatherforecast.presentation.screen.component.PrimaryButton
-import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
 import org.envobyte.weatherforecast.presentation.theme.PrimaryGradientBg
+import org.envobyte.weatherforecast.presentation.theme.PrimaryTextColor
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import weatherly.composeapp.generated.resources.Res
@@ -38,18 +36,12 @@ fun IntroScreen(
     navController: NavHostController,
     introViewModel: IntroViewModel = koinViewModel()
 ) {
-
-    val isFirstTime by introViewModel.isFirstTime.collectAsState()
-    if (isFirstTime == false) {
-        navController.navigate(Screen.Home) {
-            popUpTo(0)
-        }
-        return
-    }
     IntroScreenContent(
         onGetStartedClick = {
             introViewModel.updateFirstTime()
-            navController.navigate(Screen.Home)
+            navController.navigate(Screen.Home) {
+                popUpTo(0)
+            }
         }
     )
 }
