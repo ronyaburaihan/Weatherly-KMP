@@ -33,8 +33,9 @@ fun SunriseSunsetCard(
     modifier: Modifier = Modifier,
     icon: DrawableResource,
     title: String,
-    data: String,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface.copy(.8f),
+    description: String,
+    backgroundColor: Color,
+    contentColor: Color,
     bottom: DrawableResource,
 ) {
     Card(
@@ -49,13 +50,17 @@ fun SunriseSunsetCard(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
-                modifier = Modifier.padding(horizontal = 12.dp),
+                modifier = Modifier.padding(
+                    start = 12.dp,
+                    end = 12.dp,
+                    top = 8.dp
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = painterResource(icon),
                     contentDescription = title,
-                    modifier = Modifier.size(40.dp)//.scale(scaleX = 2f, scaleY = 2f)
+                    modifier = Modifier.size(40.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -68,9 +73,12 @@ fun SunriseSunsetCard(
             }
 
             Text(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
+                modifier = Modifier.fillMaxWidth().padding(
+                    top = 5.dp,
+                    bottom = 14.dp
+                ),
                 textAlign = TextAlign.Center,
-                text = data,
+                text = description,
                 style = MaterialTheme.typography.bodyMedium
             )
             Box(

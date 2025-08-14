@@ -49,10 +49,12 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.envobyte.weatherforecast.core.permission.getPlatformLocationHandler
+import org.envobyte.weatherforecast.domain.model.DailyForecast
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.presentation.navigation.Screen
 import org.envobyte.weatherforecast.presentation.screen.component.AppDrawerSheet
 import org.envobyte.weatherforecast.presentation.screen.component.AppTopBar
+import org.envobyte.weatherforecast.presentation.screen.component.DrawerItem
 import org.envobyte.weatherforecast.presentation.screen.component.LocationPermissionScreen
 import org.envobyte.weatherforecast.presentation.screen.component.ShimmerEffect
 import org.envobyte.weatherforecast.presentation.screen.component.SunriseSunsetCard
@@ -110,9 +112,30 @@ fun HomeScreen(
                 HomeContent(
                     locationName = uiState.locationName ?: "",
                     weatherData = it,
+                    todayForecast = it.dailyForecasts.firstOrNull(),
                     onClick = {
                         val weatherJson = Json.encodeToString(it)
                         navController.navigate(Screen.Details(weatherJson = weatherJson))
+                    },
+                    drawerItemsClick = { item ->
+                        when (item) {
+                            DrawerItem.FEEDBACK -> {
+                                navController.navigate(Screen.Feedback)
+                                print("Feedback clicked")
+                            }
+                            DrawerItem.FAQ -> {
+                                // Handle Faq click
+                            }
+                            DrawerItem.SETTINGS -> {
+                                // Handle Settings click
+                            }
+                            DrawerItem.UPDATE -> {
+                                // Handle Update click
+                            }
+                            DrawerItem.WEATHER_INFO -> {
+                                // Handle Weather Info click
+                            }
+                        }
                     }
                 )
             }
@@ -122,8 +145,13 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeContent(locationName: String, weatherData: WeatherData, onClick: () -> Unit) {
-
+fun HomeContent(
+    locationName: String,
+    weatherData: WeatherData,
+    drawerItemsClick: (DrawerItem) -> Unit,
+    todayForecast: DailyForecast?,
+    onClick: () -> Unit
+) {
     val scope = rememberCoroutineScope()
     val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -136,6 +164,12 @@ fun HomeContent(locationName: String, weatherData: WeatherData, onClick: () -> U
                         onDismiss = {
                             scope.launch {
                                 modalDrawerState.close()
+                            }
+                        },
+                        onClick = {
+                            scope.launch {
+                                modalDrawerState.close()
+                                drawerItemsClick(it)
                             }
                         }
                     )
@@ -191,35 +225,37 @@ fun HomeContent(locationName: String, weatherData: WeatherData, onClick: () -> U
                                 precipitation = weatherData.current.precipitation,
                             )
                             Spacer(modifier = Modifier.height(20.dp))
-                            DailyForCast(weatherData, onClick = onClick)
 
-                            val todayForecast = weatherData.dailyForecasts.firstOrNull()
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                modifier = Modifier.padding(bottom = 30.dp)
-                                    .navigationBarsPadding()
-                            ) {
-                                SunriseSunsetCard(
-                                    icon = Res.drawable.img_sunrise,
-                                    title = "Sunrise",
-                                    data = todayForecast?.sunriseTime ?: "",
-                                    backgroundColor = Color(0xFFFFFFFF),
-                                    contentColor = Color(0xFF000000),
-                                    bottom = Res.drawable.img_bg_sunrise,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                SunriseSunsetCard(
-                                    icon = Res.drawable.img_sunset,
-                                    title = "Sunset",
-                                    data = todayForecast?.sunsetTime ?: "",
-                                    backgroundColor = Color(0xFFFFFFFF),
-                                    contentColor = Color(0xFF000000),
-                                    bottom = Res.drawable.img_bg_sunset,
-                                    modifier = Modifier.weight(1f)
-                                )
+                            todayForecast?.let { forecast ->
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                ) {
+                                    SunriseSunsetCard(
+                                        icon = Res.drawable.img_sunrise,
+                                        title = "Sunrise",
+                                        description = forecast.sunriseTime,
+                                        backgroundColor = Color.White.copy(.7f),
+                                        contentColor = Color(0xFF000000),
+                                        bottom = Res.drawable.img_bg_sunrise,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    SunriseSunsetCard(
+                                        icon = Res.drawable.img_sunset,
+                                        title = "Sunset",
+                                        description = forecast.sunsetTime,
+                                        backgroundColor = Color.White.copy(.7f),
+                                        contentColor = Color(0xFF000000),
+                                        bottom = Res.drawable.img_bg_sunset,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                }
                             }
-
-
+                            Spacer(modifier = Modifier.height(20.dp))
+                            DailyForCast(weatherData, onClick = onClick)
+                            Spacer(
+                                modifier = Modifier.padding(bottom = 20.dp)
+                                    .navigationBarsPadding()
+                            )
                         }
                     }
                 }
@@ -271,7 +307,7 @@ fun WeatherDetailsCard(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
-            .background(Color.White, shape = RoundedCornerShape(24.dp))
+            .background(Color.White.copy(.7f), shape = RoundedCornerShape(24.dp))
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -321,10 +357,13 @@ private fun WeatherInfoItem(
 }
 
 @Composable
-private fun DailyForCast(weatherData: WeatherData, onClick: () -> Unit) {
+private fun DailyForCast(
+    weatherData: WeatherData,
+    onClick: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-            .background(Color.White.copy(.8f), shape = RoundedCornerShape(24.dp))
+            .background(Color.White.copy(.7f), shape = RoundedCornerShape(24.dp))
             .clip(RoundedCornerShape(24.dp)).padding(16.dp)
     ) {
         Text(
