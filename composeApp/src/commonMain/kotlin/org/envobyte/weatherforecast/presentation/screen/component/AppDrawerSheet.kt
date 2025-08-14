@@ -1,6 +1,7 @@
 package org.envobyte.weatherforecast.presentation.screen.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,12 +42,22 @@ import weatherly.composeapp.generated.resources.feedback
 import weatherly.composeapp.generated.resources.info
 import weatherly.composeapp.generated.resources.settings
 
+
+enum class DrawerItem {
+    WEATHER_INFO,
+    UPDATE,
+    FEEDBACK,
+    FAQ,
+    SETTINGS
+}
+
 @Composable
 fun AppDrawerSheet(
     drawerState: DrawerState,
     modifier: Modifier = Modifier,
     weatherData: WeatherData,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onClick: (DrawerItem) -> Unit
 ) {
     ModalDrawerSheet(
         drawerState = drawerState,
@@ -56,13 +67,20 @@ fun AppDrawerSheet(
         drawerTonalElevation = 10.dp,
         windowInsets = WindowInsets.statusBars,
         content = {
-            DrawerContent(weatherData = weatherData, onDismiss = onDismiss)
+            DrawerContent(
+                weatherData = weatherData, onDismiss = onDismiss,
+                onclick = onClick
+            )
         }
     )
 }
 
 @Composable
-private fun DrawerContent(weatherData: WeatherData, onDismiss: () -> Unit) {
+private fun DrawerContent(
+    weatherData: WeatherData,
+    onDismiss: () -> Unit,
+    onclick: (DrawerItem) -> Unit
+) {
 
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -78,7 +96,7 @@ private fun DrawerContent(weatherData: WeatherData, onDismiss: () -> Unit) {
         }
         Column(
             horizontalAlignment = Alignment.End,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
 
             Box(modifier = Modifier) {
@@ -103,27 +121,32 @@ private fun DrawerContent(weatherData: WeatherData, onDismiss: () -> Unit) {
             Spacer(Modifier.height(36.dp))
             NavigationItem(
                 title = "Weather Info",
-                painter = painterResource(Res.drawable.current_weather)
+                painter = painterResource(Res.drawable.current_weather),
+                onClick = { onclick(DrawerItem.WEATHER_INFO) },
             )
             Spacer(Modifier.height(12.dp))
             NavigationItem(
                 title = "Update",
                 painter = painterResource(Res.drawable.info),
+                onClick = { onclick(DrawerItem.UPDATE) },
             )
             Spacer(Modifier.height(12.dp))
             NavigationItem(
                 title = "Feedback",
                 painter = painterResource(Res.drawable.feedback),
+                onClick = { onclick(DrawerItem.FEEDBACK) },
             )
             Spacer(Modifier.height(12.dp))
             NavigationItem(
                 title = "Faq",
                 painter = painterResource(Res.drawable.faq),
+                onClick = { onclick(DrawerItem.FAQ) }
             )
             Spacer(Modifier.height(12.dp))
             NavigationItem(
                 title = "Settings",
                 painter = painterResource(Res.drawable.settings),
+                onClick = { onclick(DrawerItem.SETTINGS) }
             )
         }
     }
@@ -132,10 +155,19 @@ private fun DrawerContent(weatherData: WeatherData, onDismiss: () -> Unit) {
 
 
 @Composable
-private fun NavigationItem(title: String, painter: Painter) {
+private fun NavigationItem(
+    title: String,
+    painter: Painter,
+    onClick: () -> Unit
+) {
     Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(vertical = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(
+                vertical = 8.dp,
+                horizontal = 16.dp
+            ),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
