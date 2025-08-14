@@ -34,24 +34,22 @@ fun SunriseSunsetCard(
     icon: DrawableResource,
     title: String,
     data: String,
-    backgroundColor: Color,
-    contentColor: Color,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface.copy(.8f),
     bottom: DrawableResource,
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
-        modifier = modifier
-            .height(160.dp),
+        modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
-                modifier= Modifier.padding(12.dp),
+                modifier = Modifier.padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
@@ -64,24 +62,23 @@ fun SunriseSunsetCard(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        color = contentColor
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
             }
 
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
                 textAlign = TextAlign.Center,
                 text = data,
                 style = MaterialTheme.typography.bodyMedium
             )
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp),
                 contentAlignment = Alignment.BottomEnd
-            ){
+            ) {
                 Image(
                     painter = painterResource(bottom),
                     contentDescription = null,

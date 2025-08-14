@@ -31,7 +31,14 @@ fun WeatherApiResponse.toWeatherInfo(): WeatherInfo {
 
 fun WeatherApiResponse.toDailyForecast(): List<DailyForecast> {
     return daily.time.mapIndexed { index, dateString ->
+        val (dayName, monthName, date) = formatDateDay(daily.time[index].substringBefore("T"))
         DailyForecast(
+            shortDate = date,
+            shortDayName = dayName,
+            longDate = formatDateString(
+                daily.time[index].substringBefore("T"),
+                isShortDayName = true
+            ),
             formattedDate = formatDateString(daily.time[index].substringBefore("T"), false),
             maxTemperature = "${daily.temperature_2m_max[index]}${dailyUnits.temperature_2m_max}.",
             minTemperature = "${daily.temperature_2m_min[index]}${dailyUnits.temperature_2m_min}",
@@ -51,14 +58,7 @@ fun WeatherApiResponse.toDailyForecast(): List<DailyForecast> {
 
 fun WeatherApiResponse.toHourlyForecast(): List<HourlyForecast> {
     return hourly.time.mapIndexed { index, dateString ->
-        val (dayName, monthName, date) = formatDateDay(hourly.time[index].substringBefore("T"))
         HourlyForecast(
-            shortDate = date,
-            shortDayName = dayName,
-            longDate = formatDateString(
-                hourly.time[index].substringBefore("T"),
-                isShortDayName = true
-            ),
             formattedTime = formatHourTime(dateString),
             temperature = hourly.temperature[index],
             temperatureUnit = hourlyUnits.temperature,

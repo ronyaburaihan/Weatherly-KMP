@@ -4,6 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DailyForecast(
+    val shortDate: String,
+    val shortDayName: String,
+    val longDate: String,
     val formattedDate: String,
     val maxTemperature: String,
     val minTemperature: String,
