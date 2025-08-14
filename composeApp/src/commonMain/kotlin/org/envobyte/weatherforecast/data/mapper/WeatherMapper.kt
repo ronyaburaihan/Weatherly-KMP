@@ -168,7 +168,7 @@ fun formatDayAndTime(dateTimeString: String): String {
         else -> hour
     }
 
-    return "$dayName, $hour12:$minute$amPm"
+    return "$dayName,\n $hour12:$minute$amPm"
 }
 
 
