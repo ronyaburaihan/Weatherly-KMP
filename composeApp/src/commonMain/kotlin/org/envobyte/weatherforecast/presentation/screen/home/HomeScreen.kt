@@ -148,7 +148,7 @@ fun HomeScreen(
 fun HomeContent(
     locationName: String,
     weatherData: WeatherData,
-    drawerItemsClick: (DrawerItem) -> Unit
+    drawerItemsClick: (DrawerItem) -> Unit,
     todayForecast: DailyForecast?,
     onClick: () -> Unit
 ) {
