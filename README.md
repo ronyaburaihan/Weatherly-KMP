@@ -7,18 +7,23 @@ A modern, cross-platform weather application built with Kotlin Multiplatform and
 ### Core Functionality
 - **Real-time Weather Data**: Current weather conditions with temperature, humidity, wind speed, and precipitation
 - **7-Day Forecast**: Extended weather forecast with daily temperature and precipitation data
+- **Detailed Weather View**: Comprehensive weather details with hourly forecasts and temperature charts
 - **Location-based Weather**: Automatic location detection with permission handling
 - **Reverse Geocoding**: Display location names based on coordinates
 - **Time-based Greetings**: Dynamic greetings based on current time (Good Morning, Good Afternoon, etc.)
 - **Weather Icons**: Emoji-based weather condition indicators
+- **Sunrise/Sunset Information**: Daily sunrise and sunset times with visual cards
 
 ### User Experience
-- **Onboarding Flow**: First-time user introduction screen
-- **Permission Management**: Seamless location permission requests
+- **Native Splash Screen**: Android native splash screen with data preloading
+- **Onboarding Flow**: First-time user introduction screen with smooth animations
+- **Permission Management**: Seamless location permission requests with user-friendly screens
 - **Loading States**: Shimmer effects during data loading
 - **Error Handling**: Comprehensive error states and user feedback
 - **Responsive UI**: Adaptive design for different screen sizes
-- **Navigation Drawer**: Side menu with app information
+- **Navigation Drawer**: Side menu with weather information and app navigation
+- **Feedback System**: User feedback collection screen
+- **Smooth Animations**: Crossfade transitions and animated UI elements
 
 ## 🏗️ Architecture
 
@@ -50,11 +55,16 @@ The project follows Clean Architecture principles with clear separation of conce
 - **Ktor**: HTTP client for API communication
 - **DataStore**: Local data persistence
 - **Kotlinx Serialization**: JSON serialization/deserialization
-- **Navigation Compose**: Screen navigation
+- **Navigation Compose**: Type-safe screen navigation
 - **Kotlinx DateTime**: Date and time handling
+- **Kotlinx Coroutines**: Asynchronous programming
 
 ### Platform-Specific
-- **Android**: Google Play Services Location, Activity Result API
+- **Android**:
+  - Google Play Services Location
+  - Activity Result API
+  - Core Splash Screen API
+  - Material Design 3
 - **iOS**: Core Location framework
 
 ## 🌐 APIs Used
@@ -63,8 +73,10 @@ The project follows Clean Architecture principles with clear separation of conce
 - **Open-Meteo API**: Free weather API providing:
   - Current weather conditions
   - 7-day forecast
+  - Hourly forecasts
   - Multiple weather parameters (temperature, humidity, wind, precipitation)
   - Weather codes for condition mapping
+  - Sunrise/sunset times
 
 ### Location Services
 - **Nominatim API (OpenStreetMap)**: Reverse geocoding service for:
