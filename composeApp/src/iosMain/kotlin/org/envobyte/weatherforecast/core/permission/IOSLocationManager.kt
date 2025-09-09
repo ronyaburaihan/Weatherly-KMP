@@ -12,12 +12,32 @@ import platform.CoreLocation.kCLAuthorizationStatusNotDetermined
 import platform.CoreLocation.kCLAuthorizationStatusRestricted
 import platform.darwin.NSObject
 import kotlin.coroutines.resume
+import kotlin.coroutines.Continuation
 
-class IOSLocationManager : NSObject(), CLLocationManagerDelegateProtocol,
-    LocationManager {
+private class LocationPermissionDelegate(
+    private val continuation: Continuation<PermissionState>
+) : NSObject(), CLLocationManagerDelegateProtocol {
+    
+    override fun locationManagerDidChangeAuthorization(
+        manager: CLLocationManager
+    ) {
+        val status = CLLocationManager.Companion.authorizationStatus()
+        val permissionState = when (status) {
+            kCLAuthorizationStatusAuthorizedAlways,
+            kCLAuthorizationStatusAuthorizedWhenInUse -> PermissionState.GRANTED
+            kCLAuthorizationStatusDenied -> PermissionState.DENIED
+            kCLAuthorizationStatusRestricted -> PermissionState.PERMANENTLY_DENIED
+            kCLAuthorizationStatusNotDetermined -> PermissionState.NOT_DETERMINED
+            else -> PermissionState.DENIED
+        }
+        continuation.resume(permissionState)
+    }
+}
+
+class IOSLocationManager : LocationManager {
     private val locationManager = CLLocationManager()
+    
     override suspend fun requestLocationPermission(): PermissionState {
-        locationManager.delegate = this
         return suspendCancellableCoroutine { cont ->
             val status = CLLocationManager.Companion.authorizationStatus()
 
@@ -36,8 +56,9 @@ class IOSLocationManager : NSObject(), CLLocationManagerDelegateProtocol,
                 }
 
                 kCLAuthorizationStatusNotDetermined -> {
+                    val delegate = LocationPermissionDelegate(cont)
+                    locationManager.delegate = delegate
                     locationManager.requestWhenInUseAuthorization()
-                    // In delegate method, resume continuation
                 }
 
                 else -> cont.resume(PermissionState.DENIED)

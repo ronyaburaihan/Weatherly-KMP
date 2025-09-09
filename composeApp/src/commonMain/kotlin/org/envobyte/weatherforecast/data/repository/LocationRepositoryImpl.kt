@@ -1,6 +1,6 @@
 package org.envobyte.weatherforecast.data.repository
 
-import org.envobyte.weatherforecast.data.remote.RemoteApiService
+import org.envobyte.weatherforecast.data.source.remote.RemoteApiService
 import org.envobyte.weatherforecast.domain.repository.LocationRepository
 
 class LocationRepositoryImpl(

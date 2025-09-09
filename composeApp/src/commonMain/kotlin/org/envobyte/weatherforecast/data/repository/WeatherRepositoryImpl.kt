@@ -3,7 +3,7 @@ package org.envobyte.weatherforecast.data.repository
 import org.envobyte.weatherforecast.data.mapper.toCurrentWeather
 import org.envobyte.weatherforecast.data.mapper.toForecast
 import org.envobyte.weatherforecast.data.mapper.toWeatherData
-import org.envobyte.weatherforecast.data.remote.RemoteApiService
+import org.envobyte.weatherforecast.data.source.remote.RemoteApiService
 import org.envobyte.weatherforecast.domain.model.DailyForecast
 import org.envobyte.weatherforecast.domain.model.WeatherData
 import org.envobyte.weatherforecast.domain.model.WeatherInfo

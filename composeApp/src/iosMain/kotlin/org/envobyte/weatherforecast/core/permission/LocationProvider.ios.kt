@@ -2,9 +2,11 @@ package org.envobyte.weatherforecast.core.permission
 
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
-import platform.CoreLocation.*
-import platform.darwin.NSObjectProtocol
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.envobyte.weatherforecast.domain.model.LocationData
+import platform.CoreLocation.CLLocation
+import platform.CoreLocation.CLLocationManager
+import platform.CoreLocation.CLLocationManagerDelegateProtocol
 import platform.Foundation.NSError
 import platform.darwin.NSObject
 import kotlin.coroutines.resume

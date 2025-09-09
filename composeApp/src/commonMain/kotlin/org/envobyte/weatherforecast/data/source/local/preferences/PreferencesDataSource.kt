@@ -1,4 +1,4 @@
-package org.envobyte.weatherforecast.data.local.preferences
+package org.envobyte.weatherforecast.data.source.local.preferences
 
 import kotlinx.coroutines.flow.Flow
 

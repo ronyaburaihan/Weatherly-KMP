@@ -1,4 +1,4 @@
-package org.envobyte.weatherforecast.data.remote
+package org.envobyte.weatherforecast.data.source.remote
 
 import org.envobyte.weatherforecast.data.model.GeoLocationResponse
 import org.envobyte.weatherforecast.data.model.WeatherApiResponse

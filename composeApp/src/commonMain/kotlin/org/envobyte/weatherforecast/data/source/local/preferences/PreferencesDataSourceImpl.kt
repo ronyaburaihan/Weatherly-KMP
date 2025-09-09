@@ -1,4 +1,4 @@
-package org.envobyte.weatherforecast.data.local.preferences
+package org.envobyte.weatherforecast.data.source.local.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

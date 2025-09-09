@@ -2,8 +2,8 @@ package org.envobyte.weatherforecast.core.di
 
 
 import org.envobyte.weatherforecast.core.platform.DataStoreFactory
-import org.envobyte.weatherforecast.data.local.preferences.PreferencesDataSource
-import org.envobyte.weatherforecast.data.local.preferences.PreferencesDataSourceImpl
+import org.envobyte.weatherforecast.data.source.local.preferences.PreferencesDataSource
+import org.envobyte.weatherforecast.data.source.local.preferences.PreferencesDataSourceImpl
 import org.koin.dsl.module
 
 
